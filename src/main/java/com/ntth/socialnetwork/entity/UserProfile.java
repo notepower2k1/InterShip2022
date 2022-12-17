@@ -49,7 +49,6 @@ public class UserProfile {
 	@Column(name = "update_date", nullable = false)
 	private Date updateDate;
 	
-	@JsonIgnore
 	@OneToOne
 	@JoinColumn(name = "user_id", referencedColumnName = "user_id")
 	private User user;

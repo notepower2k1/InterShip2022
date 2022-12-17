@@ -3,6 +3,7 @@ package com.ntth.socialnetwork.controller;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,12 @@ public class UserProfileController {
 		this.userProfileRepo = userProfileRepo;
 	}
 
+	@GetMapping("/all")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	ResponseEntity<List<UserProfile>> getAllProfile() {
+		List<UserProfile> listProfile = this.userProfileRepo.findAll();
+		return ResponseEntity.ok().body(listProfile);
+	}
 	
 	@GetMapping("/{user_id}")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
