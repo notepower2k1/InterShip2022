@@ -43,6 +43,8 @@ const removeFriendShip = async (userId1,userId2) => {
     return await rootInstance.delete(`friend/delete-friendship/${userId1}/${userId2}`);
 }
 
+
+
 const FriendService = {
     getListFriend,
     getListRequester,
