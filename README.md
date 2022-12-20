@@ -1,5 +1,4 @@
 # InterShip2022
-# FrontEnd Branch - ReactJS
-# BackEnd Brach - Spring boost Rest API
+# Trường Branch
 # user:hung2727
 # password:12345678
