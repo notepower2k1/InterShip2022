@@ -42,6 +42,7 @@ public class User {
   
   	@Column(name = "registered_date", nullable = false)
   	private Date registeredDate;
+  	
   	@JsonIgnore
   	@ManyToMany(fetch = FetchType.LAZY)
   	@JoinTable(  name = "user_roles", 
@@ -61,14 +62,28 @@ public class User {
   	@OneToMany(mappedBy="user", cascade = CascadeType.ALL)
   	private Set<GroupJoinDetails> gpDetailsList;
   	
+  	@JsonIgnore
+  	@OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+  	private Set<ConversationReply> conversationReply;
 
-	
+  	@JsonIgnore
+  	@OneToOne(mappedBy="user")
+  	private UserProfile profile;
+  	
   	public Set<Post> getPost() {
 		return post;
 	}
 
 	public void setPost(Set<Post> post) {
 		this.post = post;
+	}
+
+	public UserProfile getProfile() {
+		return profile;
+	}
+
+	public void setProfile(UserProfile profile) {
+		this.profile = profile;
 	}
 
 	public Set<PostComment> getComment() {
@@ -88,6 +103,14 @@ public class User {
 	}
 
 	
+	public Set<ConversationReply> getConversationReply() {
+		return conversationReply;
+	}
+
+	public void setConversationReply(Set<ConversationReply> conversationReply) {
+		this.conversationReply = conversationReply;
+	}
+
 	public User() {
   		
   	}
