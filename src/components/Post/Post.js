@@ -5,7 +5,13 @@ import PostService from "../../services/post.service";
 import AuthService from "../../services/auth.service";
 import ReactEmoji from 'react-emoji';
 import CommentComponent from '../Comment/CommentComponent';
+<<<<<<< HEAD
 
+=======
+// import Button from '@atlaskit/button';
+// import LikeIcon from '@atlaskit/icon/glyph/like'
+// import CommentIcon from '@atlaskit/icon/glyph/comment'
+>>>>>>> Truong
 const Post = ({data}) => {
     let navigate = useNavigate();
     const currentUser = AuthService.getCurrentUser();
@@ -137,6 +143,7 @@ const Post = ({data}) => {
                             </div>
                             <div>
                         <div className="feature-box d-flex ">
+<<<<<<< HEAD
                             <button className="btn btn-primary w-100">
                             <i className="fa fa-thumbs-up"> Like</i>
 
@@ -146,6 +153,18 @@ const Post = ({data}) => {
                             >
                                 <i className="fa fa-comment"> Comment</i>
                             </button>
+=======
+                            <button
+                           
+                            // iconBefore={<LikeIcon label="" size="medium"></LikeIcon> }
+                            >Like</button>
+                            <button 
+                          
+                            // iconBefore={<CommentIcon label="" size="medium" ></CommentIcon>}
+                          
+                            onClick={(e) => handlerOpenComment(e)}
+                            >Comment</button>
+>>>>>>> Truong
                         </div>
 
 

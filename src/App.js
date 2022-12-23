@@ -11,18 +11,25 @@ import PostList from "./components/Post/PostList";
 import GroupList from "./components/Group/GroupList";
 import GroupCreate from "./components/Group/GroupCreate";
 import GroupPage from "./components/Group/GroupPage";
+<<<<<<< HEAD
 import ListConversation from "./components/Conversation/ListConversation";
 
+=======
+>>>>>>> Truong
 import ProfileComponent from "./components/Profile/ProfileComponent";
 
 import Event from "./utils/Event";
 import PrivateRoute from "./utils/PrivateRoute";
 import Search from "./components/Search/Search";
+<<<<<<< HEAD
 
 
 
 
 
+=======
+import RequesterList from "./components/Friend/RequesterList";
+>>>>>>> Truong
 function App() {
 
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -32,13 +39,17 @@ function App() {
 
   useEffect(() => {
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> Truong
     if (user) {
       setCurrentUser(user);
     }
 
     Event.on("logout", () => {
       logOut();
+<<<<<<< HEAD
 
     });
 
@@ -49,6 +60,13 @@ function App() {
     };
 
     
+=======
+    });
+
+    return () => {
+      Event.remove("logout");
+    };
+>>>>>>> Truong
   }, []);
 
   const logOut = () => {
@@ -56,8 +74,11 @@ function App() {
     setCurrentUser(undefined);
   };
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> Truong
   return (
     <div className="theme-layout">
       <div className="topbar stick">
@@ -68,10 +89,16 @@ function App() {
         <div className="top-area">
           <ul className="main-menu">
             <li>
+<<<<<<< HEAD
             { user &&  <Link to={"/profile/" + user.id}>
 
                 Home
                 </Link> }
+=======
+              <Link to={"/"}>
+                Home
+              </Link>
+>>>>>>> Truong
             </li>
             <li>
               <Link to={"/posts"}>
@@ -82,6 +109,7 @@ function App() {
               <Link to={"/groups"}>
                 Groups
               </Link>
+<<<<<<< HEAD
               
             </li>
 
@@ -93,6 +121,8 @@ function App() {
 
           </Link> }
               
+=======
+>>>>>>> Truong
             </li>
           </ul>
           <ul className="setting-area">
@@ -105,6 +135,7 @@ function App() {
                 />
               
             </li>
+<<<<<<< HEAD
             <li>{user && <Link to={"/search/" + searchInput}>
             <a href="#" title="Home" className="" data-ripple=""><i className="ti-search"></i></a>
             </Link>}
@@ -115,6 +146,26 @@ function App() {
           { user &&  <Link to={"/profile/" + user.id}>
           <img src="images/resources/admin.jpg" alt="" />
 
+=======
+            {/* kết quả tìm kiếm */}
+            <li>
+              {user && <Link to={"/search/" + searchInput}>
+                        <a href="#" title="Search" className="" data-ripple=""><i style={{fontSize: "23px"}} className="fa fa-search"></i></a>
+                      </Link>}
+              </li>  
+            {/* danh sách người gửi kết bạn */}
+            <li>
+              {user && <Link to={"/list-requester/" + user.id}>
+                        <a href="#" title="Requester" className="" data-ripple=""><i style={{fontSize: "23px"}} className="fa fa-user-plus"></i></a>
+                      </Link>}
+            </li> 
+
+          </ul>
+          <div className="user-img">
+          { user &&  <Link to={"/profile/" + user.id}>
+              <img src="images/resources/admin.jpg" alt="" />
+              <span>profile</span>
+>>>>>>> Truong
           </Link> }
             <span className="status f-online"></span>
             <div className="user-setting">
@@ -203,17 +254,33 @@ function App() {
               <ProfileComponent />
             </PrivateRoute>
           } />
+<<<<<<< HEAD
           <Route path="/conversation/:userID" element={
             <PrivateRoute>
             <ListConversation />
             </PrivateRoute>
           } />
+=======
+
+>>>>>>> Truong
         <Route path="/search/:keyword" element={
             <PrivateRoute>
               <Search />
             </PrivateRoute>
           } />
+<<<<<<< HEAD
         </Routes>
+=======
+
+        <Route path="/list-requester/:userID" element={
+            <PrivateRoute>
+              <RequesterList />
+            </PrivateRoute>
+          }/>
+        </Routes>
+
+          
+>>>>>>> Truong
       </div>
     </div>
   );
