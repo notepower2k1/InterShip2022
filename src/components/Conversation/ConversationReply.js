@@ -51,13 +51,9 @@ function ConversationReply({chatOn,increaseRenderValue,socket,renderValue,curren
 
    
   useEffect(() => {
-    
     if(chatOn){
       socket.current =io.connect("ws://localhost:8900");
-
     }
-
-
      return () => {
       socket.current.close();
     }
@@ -180,7 +176,8 @@ function ConversationReply({chatOn,increaseRenderValue,socket,renderValue,curren
                        
                           </div>
                        
-                        <span className="time_date">{convertTime(conversationReply.conversationReplyTime)}</span> </div>
+                        <span className="time_date">{convertTime(conversationReply.conversationReplyTime)}</span> 
+                        </div>
                       </div>
                     :  
                       <div className="incoming_msg">

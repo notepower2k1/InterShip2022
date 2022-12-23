@@ -4,8 +4,6 @@ const getListFriend = async (userID) => {
     return await rootInstance.get("/friend/list-friend/" + userID);
 }
 
-<<<<<<< HEAD
-=======
 const getListRequester = async (userID) => {
     return await rootInstance.get("/friend/list-requester/" + userID);
 }
@@ -40,16 +38,11 @@ const checkIsRequester = async (currentUserID,userId) => {
     return listCurrentUserRequester.some(userProfile => userProfile.user.id == userId)
 }
 
->>>>>>> Truong
 //delete friendship 
 const removeFriendShip = async (userId1,userId2) => {
     return await rootInstance.delete(`friend/delete-friendship/${userId1}/${userId2}`);
 }
 
-<<<<<<< HEAD
-const FriendService = {
-    getListFriend
-=======
 
 
 const FriendService = {
@@ -62,6 +55,5 @@ const FriendService = {
     checkIsRequesting,
     checkIsRequester,
     checkIsFriend
->>>>>>> Truong
 };
 export default FriendService;

@@ -136,6 +136,6 @@ img{ max-width:100%;}
 .chat_list{
     cursor: pointer;
 }
-.icon ,.delete-icon{
+.sent_msg > .delete-icon{
   display:none;
 }

@@ -7,38 +7,6 @@ import FriendService from "../../services/FriendService"
 function ButtonFriend(props){
 
     // -------------
-<<<<<<< HEAD
-    const [listFriendCurrentUser,setListFriendCurrentUser] = useState()
-    const [isFriend,setIsFriend] = useState(true)
-    const currentUser = AuthService.getCurrentUser();
-    useEffect(() =>{
-        FriendService.getListFriend(currentUser.id).then(res => setListFriendCurrentUser(res.data))
-        checkIsFriend()
-    })
-
-    const checkIsFriend = () => {
-        if (listFriendCurrentUser){
-          let isFr = false
-          listFriendCurrentUser.map((userProfile) => {
-            if (userProfile.user.id == props.userID){
-              isFr = true
-            }
-          })
-          if (isFr){
-            setIsFriend(true)
-          } else{
-            setIsFriend(false)
-          }
-        }
-      }
-    // const [isCurrentProfile,setIsCurrentProfile] = useState()
-
-    return <div className="button_friend mr-2">
-            {isFriend ?
-              <button className="btn btn-danger">Hủy kết bạn</button> 
-            : <button className="btn btn-info">Kết bạn</button>}
-          </div>
-=======
     const [isFriend,setIsFriend] = useState()
     const [isRequesting, setIsRequesting] = useState()
     const [isRequester, setIsRequester] = useState()
@@ -49,19 +17,16 @@ function ButtonFriend(props){
         FriendService.checkIsFriend(currentUser.id,props.userID).then(res => 
           {
             setIsFriend(res)
-            setChange(!change)
           }
         )
         FriendService.checkIsRequesting(currentUser.id,props.userID).then(res => 
           {
             setIsRequesting(res)
-            setChange(!change)
           }
         )
         FriendService.checkIsRequester(currentUser.id,props.userID).then(res => 
           {
             setIsRequester(res)
-            setChange(!change)
           }
         )
     },[props.userID,change])
@@ -126,6 +91,5 @@ function ButtonFriend(props){
                   )
                 }
     
->>>>>>> Truong
 }
 export default ButtonFriend

@@ -11,7 +11,7 @@ function CardUser({user}) {
     useEffect(() =>{
         const avatarRef = ref(storage,`avatarImages/${user.avatar}`);
         getDownloadURL(avatarRef).then(url => setAvatar(url))
-    },[user])
+    },[])
 
     return (
         <Card  style={{ width: '15rem',marginTop: '20px' }}>                           

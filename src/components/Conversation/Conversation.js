@@ -58,8 +58,6 @@ function Conversation({chatOn,renderValue,data,sender}) {
         
         setConversationReplyTime(dateValue.toLocaleDateString("en-GB"))
     }
-
-   
   return (
     <div className="">
     

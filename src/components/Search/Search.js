@@ -3,15 +3,9 @@ import {Form,Card,Button,Row,Col } from 'react-bootstrap'
 import { useParams } from "react-router-dom";
 import SearchService from "../../services/SearchService"
 import {Link } from "react-router-dom";
-<<<<<<< HEAD
-function Search(){
-    const [listSearch,setlistSearch] = useState()
-
-=======
 
 function Search(){
     const [listSearch,setlistSearch] = useState()
->>>>>>> Truong
     const {keyword} = useParams();
 
     console.log(keyword);
