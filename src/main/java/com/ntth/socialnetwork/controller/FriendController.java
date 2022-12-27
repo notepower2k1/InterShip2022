@@ -29,7 +29,7 @@ public class FriendController {
 	
 	@Autowired
 	private FriendShipRepository friendShipRepo;
-
+	
 	//--------------------------Friend-------------------------------
 		//get list friend of user have {id}
 	@GetMapping("/friend/list-friend/{id}")

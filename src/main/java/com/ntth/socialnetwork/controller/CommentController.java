@@ -61,6 +61,7 @@ public class CommentController {
 		PostComment result = commentRepo.save(comment);
 		return new ResponseEntity<>(result, HttpStatus.CREATED);
 	}
+	
 	@PutMapping("/update/{id}")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
 	ResponseEntity<PostComment> updateComment(@PathVariable("id") Long id,@RequestBody PostComment comment){
