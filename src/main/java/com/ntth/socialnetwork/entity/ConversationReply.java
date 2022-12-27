@@ -15,6 +15,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 
+
 @Entity
 @Table(name = "conversation_reply")
 public class ConversationReply {
@@ -34,6 +35,10 @@ public class ConversationReply {
 	@NotNull
 	@Column(name = "status", nullable = false)
 	private int status;
+	
+	@NotNull
+	@Column(name = "detele_status", nullable = false)
+	private int deleleStatus;
 	
 	@ManyToOne
     @JoinColumn(name="user_id_fk", nullable=false)
@@ -67,6 +72,16 @@ public class ConversationReply {
 
 	public Timestamp getConversationReplyTime() {
 		return conversationReplyTime;
+	}
+
+
+	public int getDeleleStatus() {
+		return deleleStatus;
+	}
+
+
+	public void setDeleleStatus(int deleleStatus) {
+		this.deleleStatus = deleleStatus;
 	}
 
 
@@ -105,15 +120,19 @@ public class ConversationReply {
 	}
 
 
-	public ConversationReply(Long id, @NotBlank String reply, @NotBlank Timestamp conversationReplyTime, User user,
-			Conversation conversation,@NotBlank int status) {
+
+
+
+	public ConversationReply(Long id, @NotBlank String reply, @NotNull Timestamp conversationReplyTime,
+			@NotNull int status, @NotNull int deleleStatus, User user, Conversation conversation) {
 		super();
 		this.id = id;
 		this.reply = reply;
 		this.conversationReplyTime = conversationReplyTime;
+		this.status = status;
+		this.deleleStatus = deleleStatus;
 		this.user = user;
 		this.conversation = conversation;
-		this.status = status;
 	}
 
 

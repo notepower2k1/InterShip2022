@@ -69,11 +69,10 @@ public class ConversationReplyController {
 		return new ResponseEntity<>(result, HttpStatus.CREATED);
 	}
 	
-	@DeleteMapping("/remove/{id}")
+	@PutMapping("/remove/{conversationReplyID}")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-	ResponseEntity<?> deleteReply(@PathVariable Long id){	
-		conversationReplyRepository.deleteById(id);
-		return ResponseEntity.ok().build();
+	public void deleteMessage(@PathVariable("conversationReplyID") Long conversationReplyID) {
+			conversationReplyRepository.deleteMessage(conversationReplyID);
 	}
 	
 	

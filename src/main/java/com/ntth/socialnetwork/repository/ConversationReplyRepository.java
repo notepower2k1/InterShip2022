@@ -33,6 +33,13 @@ public interface ConversationReplyRepository extends JpaRepository<ConversationR
 	@Transactional
 	@Query(value = "UPDATE conversation_reply SET status=1 WHERE c_id_fk = :#{#c_id} and  user_id_fk = :#{#user_id_fk}", nativeQuery = true)
 	void updateStatusReceiver(@Param("c_id") long c_id,@Param("user_id_fk") long user_id_fk);
+	
+	
+	
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE conversation_reply SET detele_status=1 WHERE cr_id = :#{#cr_id} ", nativeQuery = true)
+	void deleteMessage(@Param("cr_id") long conversationReplyID);
 }
 
 	

@@ -1,6 +1,5 @@
 package com.ntth.socialnetwork.entity;
 
-import java.sql.Timestamp;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -13,7 +12,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 @Entity
 @Table(name = "conversation")
@@ -24,11 +25,9 @@ public class Conversation {
 	@Column(name = "c_id", nullable = false)
 	private Long id;
 
-	@NotBlank
-	@Column(name = "time", nullable = false)
-	private Timestamp conversationTime;
+
 	
-	@NotBlank
+	@NotNull
 	@Column(name = "status", nullable = false)
 	private int status;
 	
@@ -52,13 +51,7 @@ public class Conversation {
 		this.id = id;
 	}
 
-	public Timestamp getConversationTime() {
-		return conversationTime;
-	}
 
-	public void setConversationTime(Timestamp conversationTime) {
-		this.conversationTime = conversationTime;
-	}
 
 	public User getUserOne() {
 		return userOne;
@@ -76,10 +69,9 @@ public class Conversation {
 		this.userTwo = userTwo;
 	}
 
-	public Conversation(Long id, @NotBlank Timestamp conversationTime, User userOne, User userTwo) {
+	public Conversation(Long id, User userOne, User userTwo) {
 		super();
 		this.id = id;
-		this.conversationTime = conversationTime;
 		this.userOne = userOne;
 		this.userTwo = userTwo;
 	}
@@ -87,6 +79,12 @@ public class Conversation {
 	public Conversation() {
 		super();
 	}
+	
+
+
+
+
+
 	
 	
 	
