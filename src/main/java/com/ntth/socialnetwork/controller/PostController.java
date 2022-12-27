@@ -130,6 +130,7 @@ public class PostController {
 			Set<EditHistory> oldPostschange = post.getPostsChange();
 			post.setContent(postRequest.getContent());
 			post.setImage(postRequest.getImage());
+			post.setPublishedDate(currentDate);
 			
 			oldPostschange.add(editDetail);
 			post.setPostsChange(oldPostschange);

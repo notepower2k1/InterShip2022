@@ -71,10 +71,10 @@ public class User {
   	@JsonIgnore
   	@OneToMany(mappedBy="user", cascade = CascadeType.ALL)
   	private Set<ConversationReply> conversationReply;
-
+  	
   	@JsonIgnore
   	@OneToOne(mappedBy="user")
-  	private UserProfile profile;
+	private UserProfile profile;
 
 	public void setPosts(Set<Post> posts) {
 		this.posts = posts;

@@ -2,13 +2,17 @@ package com.ntth.socialnetwork.entity;
 
 import java.sql.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "userprofile")
@@ -43,7 +47,9 @@ public class UserProfile {
 	@Column(name = "update_date", nullable = false)
 	private Date updateDate;
 	
-	@OneToOne(mappedBy="profile")
+	
+	@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
 	private User user;
 	
 	@Column(name = "location_id", nullable = false)

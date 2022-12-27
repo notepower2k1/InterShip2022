@@ -139,8 +139,8 @@ public class AuthController {
     user.setRoles(roles);
     userRepository.save(user);
     
-    profileRepository.save(new UserProfile("Incognito", "", new Long(1), new Date(0, 0, 0), 
-    		"", "", "", currDate, user, new Long(1)));
+    profileRepository.save(new UserProfile("Incognito", "Stone", new Long(1), new Date(0, 0, 0), 
+    		"user.png", "background.png", "", currDate, user, new Long(1)));
     
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }
