@@ -1,5 +1,6 @@
 package com.ntth.socialnetwork.controller;
 
+import java.sql.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,6 +26,7 @@ import com.ntth.socialnetwork.entity.ERole;
 import com.ntth.socialnetwork.entity.RefreshToken;
 import com.ntth.socialnetwork.entity.Role;
 import com.ntth.socialnetwork.entity.User;
+import com.ntth.socialnetwork.entity.UserProfile;
 import com.ntth.socialnetwork.payload.request.LoginRequest;
 import com.ntth.socialnetwork.payload.request.SignupRequest;
 import com.ntth.socialnetwork.payload.request.TokenRefreshRequest;
@@ -32,6 +34,7 @@ import com.ntth.socialnetwork.payload.response.JwtResponse;
 import com.ntth.socialnetwork.payload.response.MessageResponse;
 import com.ntth.socialnetwork.payload.response.TokenRefreshResponse;
 import com.ntth.socialnetwork.repository.RoleRepository;
+import com.ntth.socialnetwork.repository.UserProfileRepository;
 import com.ntth.socialnetwork.repository.UserRepository;
 import com.ntth.socialnetwork.security.jwt.JwtUtils;
 import com.ntth.socialnetwork.security.services.RefreshTokenService;
@@ -46,7 +49,10 @@ public class AuthController {
 
   @Autowired
   UserRepository userRepository;
-
+  
+  @Autowired
+  UserProfileRepository profileRepository;
+  
   @Autowired
   RoleRepository roleRepository;
   
@@ -80,6 +86,9 @@ public class AuthController {
 
   @PostMapping("/signup")
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+	  
+	  Date currDate = new java.sql.Date(System.currentTimeMillis());
+	  
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
       return ResponseEntity
           .badRequest()
@@ -95,7 +104,7 @@ public class AuthController {
     // Create new user's account
     User user = new User(signUpRequest.getUsername(), 
             signUpRequest.getEmail(),
-            encoder.encode(signUpRequest.getPassword()), new java.sql.Date(System.currentTimeMillis()));
+            encoder.encode(signUpRequest.getPassword()), currDate);
 
     Set<String> strRoles = signUpRequest.getRole();
     Set<Role> roles = new HashSet<>();
@@ -129,7 +138,10 @@ public class AuthController {
 
     user.setRoles(roles);
     userRepository.save(user);
-
+    
+    profileRepository.save(new UserProfile("Incognito", "", new Long(1), new Date(0, 0, 0), 
+    		"", "", "", currDate, user, new Long(1)));
+    
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }
   

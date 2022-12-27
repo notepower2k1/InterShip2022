@@ -18,7 +18,6 @@ import com.ntth.socialnetwork.entity.FriendShip;
 import com.ntth.socialnetwork.entity.UserProfile;
 import com.ntth.socialnetwork.repository.FriendShipRepository;
 import com.ntth.socialnetwork.repository.UserProfileRepository;
-import com.ntth.socialnetwork.service.UserProfileService;
 
 @RestController
 @RequestMapping("/api")
@@ -30,9 +29,7 @@ public class FriendController {
 	
 	@Autowired
 	private FriendShipRepository friendShipRepo;
-	
-	@Autowired
-	private UserProfileService userProfileService;
+
 	//--------------------------Friend-------------------------------
 		//get list friend of user have {id}
 	@GetMapping("/friend/list-friend/{id}")

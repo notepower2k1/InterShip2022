@@ -13,7 +13,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "joinedgroup")
-@IdClass(ODPrimaryKey.class)
+@IdClass(GDPrimaryKey.class)
 public class GroupJoinDetails {
 	@Id
 	@ManyToOne
@@ -64,7 +64,7 @@ public class GroupJoinDetails {
   	
 }
 
-class ODPrimaryKey implements Serializable {
+class GDPrimaryKey implements Serializable {
 	
 	private Long group;
     private Long user;

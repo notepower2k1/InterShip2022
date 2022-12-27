@@ -1,15 +1,18 @@
 package com.ntth.socialnetwork.entity;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -36,26 +39,52 @@ public class Post {
 	private String image;	
   
 	@Column(name = "published_date", nullable = false)
-	private Date publishedDate;
+	private Timestamp publishedDate;
 	
 	@ManyToOne
     @JoinColumn(name="user_id", nullable=false)
     private User user;
 	
-	
+	@JsonIgnore
 	@OneToMany(mappedBy="post", cascade = CascadeType.ALL)
   	private Set<PostComment> comment;
+	
+	@JsonIgnore
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+	  name = "changed_post", 
+	  joinColumns = @JoinColumn(name = "post_id"), 
+	  inverseJoinColumns = @JoinColumn(name = "history_id"))
+	private Set<EditHistory> postsChange;
 
 	public Post() {
 		super();
 	}
 
-	public Post(String content, String image, Date publishedDate, User user) {
+	public Set<PostComment> getComment() {
+		return comment;
+	}
+
+	public void setComment(Set<PostComment> comment) {
+		this.comment = comment;
+	}
+
+	public Set<EditHistory> getPostsChange() {
+		return postsChange;
+	}
+
+	public void setPostsChange(Set<EditHistory> postsChange) {
+		this.postsChange = postsChange;
+	}
+
+	public Post(@NotBlank @Size(max = 150) String content, @NotBlank String image, Timestamp publishedDate, User user,
+			Set<EditHistory> postsChange) {
 		super();
 		this.content = content;
 		this.image = image;
 		this.publishedDate = publishedDate;
 		this.user = user;
+		this.postsChange = postsChange;
 	}
 
 	public Long getId() {
@@ -82,11 +111,11 @@ public class Post {
 		this.image = image;
 	}
 
-	public Date getPublishedDate() {
+	public Timestamp getPublishedDate() {
 		return publishedDate;
 	}
 
-	public void setPublishedDate(Date published_date) {
+	public void setPublishedDate(Timestamp published_date) {
 		this.publishedDate = published_date;
 	}
 

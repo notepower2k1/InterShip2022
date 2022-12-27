@@ -7,19 +7,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-
 
 @Entity
 @Table(name = "userprofile")
 public class UserProfile {
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "userprofile_id ", nullable = false)
@@ -49,8 +43,7 @@ public class UserProfile {
 	@Column(name = "update_date", nullable = false)
 	private Date updateDate;
 	
-	@OneToOne
-	@JoinColumn(name = "user_id", referencedColumnName = "user_id")
+	@OneToOne(mappedBy="profile")
 	private User user;
 	
 	@Column(name = "location_id", nullable = false)
@@ -144,10 +137,9 @@ public class UserProfile {
 		return user;
 	}
 
-	public UserProfile(Long userProfileID, String firstName, String lastName, Long gender, Date dateOfBirth,
+	public UserProfile(String firstName, String lastName, Long gender, Date dateOfBirth,
 			String avatar, String background, String about, Date updateDate, User user, Long locationID) {
 		super();
-		this.userProfileID = userProfileID;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.gender = gender;

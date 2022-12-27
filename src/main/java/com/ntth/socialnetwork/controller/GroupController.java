@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +23,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ntth.socialnetwork.entity.Group;
+import com.ntth.socialnetwork.entity.User;
+import com.ntth.socialnetwork.entity.UserProfile;
 import com.ntth.socialnetwork.payload.request.GroupRequest;
+import com.ntth.socialnetwork.payload.response.MessageResponse;
 import com.ntth.socialnetwork.repository.GroupJoinDetailsRepository;
 import com.ntth.socialnetwork.repository.GroupRepository;
+import com.ntth.socialnetwork.repository.UserProfileRepository;
+import com.ntth.socialnetwork.repository.UserRepository;
 
 @RestController
 @CrossOrigin
@@ -31,7 +39,11 @@ public class GroupController {
 	@Autowired
 	GroupRepository groupRepository;
 	@Autowired
+	UserRepository userRepository;
+	@Autowired
 	GroupJoinDetailsRepository joindetailsRepo;
+	@Autowired
+	UserProfileRepository userProfileRepo;
 	
 	@GetMapping("/all")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
@@ -62,11 +74,21 @@ public class GroupController {
 	
 	@PostMapping("/add")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-	public ResponseEntity<?> createGroup(@Valid @RequestBody GroupRequest requestGroup) {
+	public ResponseEntity<?> createGroup(@Valid @RequestBody GroupRequest groupRequest) {
+		String groupName = groupRequest.getGroupName();
+		if (groupRepository.existsByGroupName(groupName)) {
+			return ResponseEntity
+			          .badRequest()
+			          .body(new MessageResponse("Error: Your group name is already taken!"));
+		}
 		try {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			String username = authentication.getName();
+			User currentUser = userRepository.findByUsername(username)
+					.orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
 			Group newGroup = groupRepository.save(
-				new Group(requestGroup.getGroupName(), "...", 
-						new java.sql.Date(System.currentTimeMillis()))	
+				new Group(groupRequest.getGroupName(), "...", 
+						new java.sql.Date(System.currentTimeMillis()), currentUser)	
 			);
 			
 			return new ResponseEntity<>(newGroup, HttpStatus.CREATED);
@@ -76,7 +98,13 @@ public class GroupController {
 	}
 	
 	@PutMapping("/update/{id}")
-	public ResponseEntity<Group> updatePost(@PathVariable("id") long id, @RequestBody GroupRequest groupRequest) {
+	public ResponseEntity<?> updatePost(@PathVariable("id") long id, @RequestBody GroupRequest groupRequest) {
+		String groupName = groupRequest.getGroupName();
+		if (groupRepository.existsByGroupName(groupName)) {
+			return ResponseEntity
+			          .badRequest()
+			          .body(new MessageResponse("Error: Your group name is already taken!"));
+		}
 		Optional<Group> postData = groupRepository.findById(id);
 		
 		if (postData.isPresent()) {
@@ -121,4 +149,16 @@ public class GroupController {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	@GetMapping("/{id}/member-profile")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public ResponseEntity<List<UserProfile>> getProfileOfGroupMembers(@PathVariable("id") Long id) {
+		try {
+			List<UserProfile> profiles = userProfileRepo.getProfileOfGroupMembers(id);
+			return new ResponseEntity<>(profiles, HttpStatus.ACCEPTED);
+		} catch (Exception e) {	
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 }

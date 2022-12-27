@@ -1,6 +1,6 @@
 package com.ntth.socialnetwork.payload.request;
 
-public class JoinGroupRequest {
+public class LJGroupRequest {
 	private Long groupId;
 	private Long userId;
 	public Long getGroupId() {

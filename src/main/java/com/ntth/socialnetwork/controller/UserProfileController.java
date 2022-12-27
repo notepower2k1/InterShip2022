@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ntth.socialnetwork.entity.Group;
 import com.ntth.socialnetwork.entity.UserProfile;
 import com.ntth.socialnetwork.repository.UserProfileRepository;
 
@@ -69,5 +70,7 @@ public class UserProfileController {
 		UserProfile result = userProfileRepo.save(profileUpdate);
 		return ResponseEntity.ok().body(result);
 	}
+	
+	
 
 }

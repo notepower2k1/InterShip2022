@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -37,6 +39,10 @@ public class Group {
   	@Column(name = "created_date", nullable = false)
   	private Date createdDate;
   	
+  	@ManyToOne
+    @JoinColumn(name="user_admin", nullable=false)
+    private User user_admin;
+  	
   	@JsonIgnore
   	@OneToMany(mappedBy="group", cascade = CascadeType.ALL)
   	private Set<GroupJoinDetails> gpDetailsList;
@@ -44,13 +50,14 @@ public class Group {
 	public Group() {
 		super();
 	}
-
+	
 	public Group(@NotBlank @Size(max = 20) String groupName, @NotBlank @Size(max = 50) String groupAbout,
-			Date createdDate) {
+			Date createdDate, User user_admin) {
 		super();
 		this.groupName = groupName;
 		this.groupAbout = groupAbout;
 		this.createdDate = createdDate;
+		this.user_admin = user_admin;
 	}
 
 	public Long getId() {

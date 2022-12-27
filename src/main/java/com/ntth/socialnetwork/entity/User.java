@@ -2,7 +2,6 @@ package com.ntth.socialnetwork.entity;
 
 import java.sql.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -42,6 +41,11 @@ public class User {
   
   	@Column(name = "registered_date", nullable = false)
   	private Date registeredDate;
+  	
+  	@OneToOne
+  	@JoinColumn(name = "userprofile_id")
+  	private UserProfile profile;
+  	
   	@JsonIgnore
   	@ManyToMany(fetch = FetchType.LAZY)
   	@JoinTable(  name = "user_roles", 
@@ -51,32 +55,34 @@ public class User {
   
   	@JsonIgnore
   	@OneToMany(mappedBy="user")
-  	private Set<Post> post;
+  	private Set<Post> posts;
   	
   	@JsonIgnore
   	@OneToMany(mappedBy="user")
-  	private Set<PostComment> comment;
+  	private Set<PostComment> comments;
+  	
+  	@JsonIgnore
+  	@OneToMany(mappedBy="user_admin", cascade = CascadeType.ALL)
+    private Set<Group> groups;
   	
   	@JsonIgnore
   	@OneToMany(mappedBy="user", cascade = CascadeType.ALL)
   	private Set<GroupJoinDetails> gpDetailsList;
   	
-
-	
-  	public Set<Post> getPost() {
-		return post;
+	public Set<Post> getPosts() {
+		return posts;
 	}
 
-	public void setPost(Set<Post> post) {
-		this.post = post;
+	public void setPosts(Set<Post> posts) {
+		this.posts = posts;
 	}
 
-	public Set<PostComment> getComment() {
-		return comment;
+	public Set<PostComment> getComments() {
+		return comments;
 	}
 
-	public void setComment(Set<PostComment> comment) {
-		this.comment = comment;
+	public void setComment(Set<PostComment> comments) {
+		this.comments = comments;
 	}
 
 	public Set<GroupJoinDetails> getGpDetailsList() {

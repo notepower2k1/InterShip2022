@@ -49,5 +49,11 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
 	
 	
 	
+	@Query(value = "SELECT up.userprofile_id, avatar, dob, "
+			+ "first_name, last_name, gender, up.user_id, about, location_id, background, update_date "
+			+ "FROM (joinedgroup j JOIN user u ON u.user_id = j.user_id) "
+			+ "JOIN userprofile up ON up.user_id = u.user_id WHERE group_id = :#{#group_id}",nativeQuery = true)
+	List<UserProfile> getProfileOfGroupMembers(@Param("group_id") long group_id);
+	
 	Optional<UserProfile> findByUser(User user);
 }
