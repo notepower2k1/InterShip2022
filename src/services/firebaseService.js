@@ -29,9 +29,9 @@ const getBackGroundFromFirebase= async (background)=>{
 
 }
 
-const FirebaseSerive = {
+const FirebaseService = {
     getAvatarFromFirebase,
     getBackGroundFromFirebase
 };
 
-export default FirebaseSerive
+export default FirebaseService

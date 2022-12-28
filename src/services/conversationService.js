@@ -47,6 +47,5 @@ const ConversationService = {
     getLastConversationReplyID,
     getCountNewMessage,
     updateStatus,
-    
 };
 export default ConversationService;

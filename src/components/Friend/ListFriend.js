@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
-import {Form,Card,Button,Row,Col } from 'react-bootstrap'
+import {Row,Col } from 'react-bootstrap'
 import FriendService from "../../services/FriendService"
-import {storage} from '../../utils/firebaseConfig';
-import {ref,uploadBytes,getDownloadURL} from "firebase/storage";
-import {Link } from "react-router-dom";
 import CardUser from "./CardUser";
 function ListFriend(props){
     const [listFriend,setListFriend] = useState()

@@ -19,6 +19,7 @@ import Event from "./utils/Event";
 import PrivateRoute from "./utils/PrivateRoute";
 import Search from "./components/Search/Search";
 import RequesterList from "./components/Friend/RequesterList";
+import NotificationList from "./components/Notification/NotificationList";
 function App() {
 
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -93,18 +94,25 @@ function App() {
                 />
               
             </li>
+
             {/* kết quả tìm kiếm */}
             <li>
               {user && <Link to={"/search/" + searchInput}>
-                        <a href="#" title="Search" className="" data-ripple=""><i style={{fontSize: "23px"}} className="fa fa-search"></i></a>
+                        <p href="#" title="Search" className="" data-ripple=""><i style={{fontSize: "23px"}} className="fa fa-search"></i></p>
                       </Link>}
               </li>  
             {/* danh sách người gửi kết bạn */}
+
             <li>
               {user && <Link to={"/list-requester/" + user.id}>
-                        <a href="#" title="Requester" className="" data-ripple=""><i style={{fontSize: "23px"}} className="fa fa-user-plus"></i></a>
+                        <p href="#" title="Requester" className="" data-ripple=""><i style={{fontSize: "23px"}} className="fa fa-user-plus"></i></p>
                       </Link>}
             </li> 
+            
+            {/* danh sách thông báo */}
+            <li>
+              {currentUser && <NotificationList currentUser ={currentUser}/>}
+            </li>
 
           </ul>
           <div className="user-img">

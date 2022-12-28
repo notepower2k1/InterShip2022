@@ -2,7 +2,7 @@ import React ,{useState ,useEffect,useRef} from 'react'
 import "./Conversation.css";
 import conversationService from '../../services/conversationService'
 import ProfileService from '../../services/ProfileService';
-import FirebaseSerive from '../../services/firebaseService';
+import FirebaseService from '../../services/firebaseService';
 
 function Conversation({chatOn,renderValue,data,sender}) {
 
@@ -42,7 +42,7 @@ function Conversation({chatOn,renderValue,data,sender}) {
         ProfileService.getProfile(sender.id).then((response) => {
             setFirstName(response.data.firstName);
             setLastName(response.data.lastName);
-            FirebaseSerive.getAvatarFromFirebase(response.data.avatar).then((response) => {
+            FirebaseService.getAvatarFromFirebase(response.data.avatar).then((response) => {
                 setAvatar(response)
             })
             

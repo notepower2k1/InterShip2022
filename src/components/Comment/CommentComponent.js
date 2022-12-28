@@ -9,6 +9,7 @@ import ReplyComponent from '../Reply/ReplyComponent';
 import AddReplyComponent from '../Reply/AddReplyComponent';
 import TextareaAutosize from 'react-textarea-autosize';
 import AuthService from '../../services/auth.service'
+import NotificationService from '../../services/NotificationService';
 
 
 
@@ -30,7 +31,8 @@ function CommentComponent({post}) {
 
   const inputRef = useRef([]);
   const formRef = useRef([]);
- 
+
+
   const increaseRenderValue = ()=>{
     setRenderValue(c=>c+1)
   }
@@ -50,6 +52,8 @@ function CommentComponent({post}) {
     var content = inputComment;
     
     const temp = {content,commentDate,user,post}
+    //tạo thông báo
+    NotificationService.createNotification(user.id,post.user.id,`profile/${post.user.id}`,3)
 
     CommentService.createComment(temp).then((res)=>{
         getAllComments();
