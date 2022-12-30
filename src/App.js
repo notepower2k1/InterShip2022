@@ -21,7 +21,7 @@ import Search from "./components/Search/Search";
 import RequesterList from "./components/Friend/ListRequester";
 import NotificationList from "./components/Notification/NotificationList";
 import { io } from "socket.io-client";
-import SearchUp from "./components/Search/SearchUp";
+import SearchUp from "./components/Search/Search";
 function App() {
 
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -219,7 +219,7 @@ function App() {
           } />
         <Route path="/search/:keyword" element={
             <PrivateRoute>
-              <SearchUp />
+              <Search />
             </PrivateRoute>
           } />
 
