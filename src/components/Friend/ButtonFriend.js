@@ -1,4 +1,5 @@
 import React ,{useState ,useEffect,useRef} from 'react'
+import { io } from 'socket.io-client';
 import AuthService from "../../services/auth.service";
 import FriendService from "../../services/FriendService"
 import NotificationService from '../../services/NotificationService';
@@ -22,7 +23,10 @@ function ButtonFriend(props){
 
     const handleAddRequest = () => {
       //tạo thông báo
-      NotificationService.createNotification(currentUser.id,props.userID,`profile/${currentUser.id}`,1)
+      NotificationService.createNotification(currentUser.id,props.userID,`profile/${currentUser.id}`,1).then(noty => {
+        let socket = io.connect("ws://localhost:8900")
+        socket.emit("sendNotification",noty.data)
+      })
       //hàm add request friend
       FriendService.addRequest(currentUser.id,props.userID).then(res => setChange(!change))
     }

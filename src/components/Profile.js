@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import AuthService from "../services/auth.service";
+import { io, Socket } from "socket.io-client";
 const Profile = () => {
     const currentUser = AuthService.getCurrentUser();
+    const socket = useRef()
+
+    useEffect(()=> {
+        socket.current = io.connect("ws://localhost:8900")
+        socket.current.emit("addUser",currentUser.id)
+    })
+
     return (
         <div className="container">
             <header className="jumbotron">

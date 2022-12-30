@@ -20,20 +20,24 @@ const getLengthNewNotification= async (recipientId) => {
 }
 
 const createNotification = async (senderId,recipientId,url,type) => {
-    const sender = await UserService.getUserById(senderId).then(res => res.data);
-    const recipient = await UserService.getUserById(recipientId).then(res => res.data);
-    const senderProfile = await ProfileService.getProfile(senderId).then(res => res.data);
+    if (senderId != recipientId){
+        const sender = await UserService.getUserById(senderId).then(res => res.data);
+        const recipient = await UserService.getUserById(recipientId).then(res => res.data);
+        const senderProfile = await ProfileService.getProfile(senderId).then(res => res.data);
+    
+        const notification = {
+            sender,
+            recipient,
+            url,
+            activityType: type,
+            isRead: 1,
+            isCheck: 1,
+            senderProfile
+        }
+        return await rootInstance.post("/notification/add",notification)
+    } 
+    return null;
 
-    const notification = {
-        sender,
-        recipient,
-        url,
-        activityType: type,
-        isRead: 1,
-        isCheck: 1,
-        senderProfile
-    }
-    return await rootInstance.post("/notification/add",notification)
 }
 
 const checkedAllNotificaiton = async () => {

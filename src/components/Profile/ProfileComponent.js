@@ -225,7 +225,7 @@ function ProfileComponent() {
 
           {/* //Render list friend */}
             <div className="card-body p-4 text-black">
-              {userID && <ListFriend userID = {userID}/>}
+              {isCurrentProfile && <ListFriend userCurrentID = {userID}/>}
             </div>
 
 

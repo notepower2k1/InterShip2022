@@ -3,8 +3,8 @@ import {Card,Row,Col } from 'react-bootstrap'
 import { useParams } from "react-router-dom";
 import FriendService from "../../services/FriendService"
 import {Link } from "react-router-dom";
-import CardUser from "./CardUser";
-function RequesterList(){
+import FriendChild from "./FriendChild";
+function ListRequester(){
 
     const [listRequester, setListRequester] = useState()
     const [change,setChange] = useState(false)
@@ -28,7 +28,7 @@ function RequesterList(){
             <Row style={{display: 'flex',justifyContent: 'flex-start' }}>
             {listRequester && listRequester.map((user) =>(
                     <Col key= {user.userProfileID} lg='3'>
-                        <CardUser user={user}/>
+                        <FriendChild user={user}/>
                         <button 
                             className="btn btn-info"
                             onClick={() => handleAcceptRequest(user.user.id)}
@@ -44,4 +44,4 @@ function RequesterList(){
     )
 }
 
-export default RequesterList;
+export default ListRequester;

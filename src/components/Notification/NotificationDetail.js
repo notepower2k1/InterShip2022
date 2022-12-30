@@ -12,7 +12,7 @@ function NotificationDetail({noty,handle}){
 
     useEffect(() => {
         FirebaseService.getAvatarFromFirebase(noty.senderProfile.avatar).then(res => setAvatar(res))
-    },[])
+    },[noty])
 
     const handleRead = (id,url) => {
         NotificationService.readedNotification(id).then(res => setChange(!change))

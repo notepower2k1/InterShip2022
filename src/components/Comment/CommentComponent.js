@@ -10,6 +10,7 @@ import AddReplyComponent from '../Reply/AddReplyComponent';
 import TextareaAutosize from 'react-textarea-autosize';
 import AuthService from '../../services/auth.service'
 import NotificationService from '../../services/NotificationService';
+import { io } from 'socket.io-client';
 
 
 
@@ -31,7 +32,7 @@ function CommentComponent({post}) {
 
   const inputRef = useRef([]);
   const formRef = useRef([]);
-
+  const socket = useRef();
 
   const increaseRenderValue = ()=>{
     setRenderValue(c=>c+1)
@@ -53,7 +54,12 @@ function CommentComponent({post}) {
     
     const temp = {content,commentDate,user,post}
     //tạo thông báo
-    NotificationService.createNotification(user.id,post.user.id,`profile/${post.user.id}`,3)
+    NotificationService.createNotification(user.id,post.user.id,`profile/${post.user.id}`,3).then(noty => {
+      let socket = io.connect("ws://localhost:8900")
+      socket.emit("sendNotification",noty.data)
+    })
+    
+    
 
     CommentService.createComment(temp).then((res)=>{
         getAllComments();

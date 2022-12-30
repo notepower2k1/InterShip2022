@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -18,19 +18,24 @@ import ProfileComponent from "./components/Profile/ProfileComponent";
 import Event from "./utils/Event";
 import PrivateRoute from "./utils/PrivateRoute";
 import Search from "./components/Search/Search";
-import RequesterList from "./components/Friend/RequesterList";
+import RequesterList from "./components/Friend/ListRequester";
 import NotificationList from "./components/Notification/NotificationList";
+import { io } from "socket.io-client";
+import SearchUp from "./components/Search/SearchUp";
 function App() {
 
   const [currentUser, setCurrentUser] = useState(undefined);
   const [searchInput, setSearchInput] = useState();
 
   const user = AuthService.getCurrentUser();
+  const socket = useRef()
 
   useEffect(() => {
 
     if (user) {
       setCurrentUser(user);
+      socket.current = io.connect("ws://localhost:8900")
+      socket.current.emit("addUser",user.id)
     }
 
     Event.on("logout", () => {
@@ -111,7 +116,7 @@ function App() {
             
             {/* danh sách thông báo */}
             <li>
-              {currentUser && <NotificationList currentUser ={currentUser}/>}
+              {currentUser && <NotificationList currentUser ={currentUser} socket = {socket.current}/>}
             </li>
 
           </ul>
@@ -214,7 +219,7 @@ function App() {
           } />
         <Route path="/search/:keyword" element={
             <PrivateRoute>
-              <Search />
+              <SearchUp />
             </PrivateRoute>
           } />
 
