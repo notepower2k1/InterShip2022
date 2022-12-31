@@ -21,7 +21,7 @@ function NotificationDetail({noty,handle}){
 
     return (
         <li>
-            <p href="notifications.html" title="">
+            <p title="">
                 <img src={avatar} alt="" />
                 <Link to={noty.url} onClick={() => handleRead(noty.id)}>
                     <div className="mesg-meta" >

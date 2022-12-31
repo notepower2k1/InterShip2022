@@ -94,7 +94,7 @@ function Navbar({user,currentUser,logOut}) {
 					</Link>
 				
 				</li> */}
-        <NotificationList currentUser = {currentUser}/>
+        <NotificationList currentUser = {currentUser} socket={socket}/>
         
 				<li>
 					<Link to={"/conversation/" + user.id} title="Messages" data-ripple=""><i className="fa-2x fa fa-comment"></i><span></span></Link>

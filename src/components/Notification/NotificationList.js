@@ -6,9 +6,9 @@ import { io } from 'socket.io-client';
 import "./Notification.css"
 import NotificationDetail from "./NotificationDetail";
 import { useSelector } from "react-redux";
-function NotificationList({currentUser}){
+function NotificationList({currentUser,socket}){
 
-    const { socket } = useSelector(state => state.socket);
+    
 
     const [listNoti,setListNoti] = useState([])
     const [length,setLength] = useState()
@@ -25,7 +25,7 @@ function NotificationList({currentUser}){
             setListNoti((prev) => [...prev, data])
             NotificationService.getLengthNewNotification(currentUser.id).then(res => setLength(res));
         })
-    },[socket])
+    },[])
 
     const showNoti = () => {
         dropdownRef.current.classList.toggle("active")

@@ -56,7 +56,7 @@ function CommentComponent({post}) {
     var content = inputComment;
     
     const temp = {content,commentDate,user,post}
-
+    console.log(temp);
     //tạo thông báo
     NotificationService.createNotification(user.id,post.user.id,`profile/${post.user.id}`,3).then(noty => {
       socket.current.emit("sendNotification",noty.data)
@@ -71,7 +71,6 @@ function CommentComponent({post}) {
     });
     
     setInputComment('');
-    console.log(temp);
   }
 
   
@@ -169,7 +168,7 @@ function CommentComponent({post}) {
                  >
                 </TextareaAutosize>                
                </div>
-                 <button disabled={!inputComment} className="float-end" onClick={(e) => saveComment(e)}>Bình luận</button>
+                 <button disabled={!inputComment} className="float-end" >Bình luận</button>
              </form>
              {
             listComments.map(     
