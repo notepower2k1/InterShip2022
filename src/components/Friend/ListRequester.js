@@ -3,45 +3,19 @@ import {Card,Row,Col } from 'react-bootstrap'
 import { useParams } from "react-router-dom";
 import FriendService from "../../services/FriendService"
 import {Link } from "react-router-dom";
-import CardUser from "./CardUser";
-import conversationService from '../../services/conversationService'
-import AuthService from '../../services/auth.service'
-
-function RequesterList(){
+import FriendChild from "./FriendChild";
+function ListRequester(){
 
     const [listRequester, setListRequester] = useState()
     const [change,setChange] = useState(false)
     const {userID} = useParams();
-    const currentUser = AuthService.getCurrentUser();
 
     useEffect(() =>{
         FriendService.getListRequester(userID).then(res => setListRequester(res.data))
     },[userID,change])
     
-    const handleAcceptRequest = (user) => {
-
-      
-
-
-        FriendService.acceptRequest(userID,user.user.id).then((res) => {
-     
-
-         
-            const status = 0;
-            const userOne = user.user;
-            const userTwo = currentUser;
-            var conversation = {status,userOne,userTwo}
-            conversationService.createConversation(conversation).then(res =>{
-
-              setChange(!change)
-            }).catch((err)=>{
-              console.log(err)
-            }); 
-   
-
-        
- 
-        });
+    const handleAcceptRequest = (userID2) => {
+        FriendService.acceptRequest(userID,userID2).then(res => setChange(!change))
     }
 
     const handleRemoveRequest = (userID2) => {
@@ -54,10 +28,10 @@ function RequesterList(){
             <Row style={{display: 'flex',justifyContent: 'flex-start' }}>
             {listRequester && listRequester.map((user) =>(
                     <Col key= {user.userProfileID} lg='3'>
-                        <CardUser user={user}/>
+                        <FriendChild user={user}/>
                         <button 
                             className="btn btn-info"
-                            onClick={() => handleAcceptRequest(user)}
+                            onClick={() => handleAcceptRequest(user.user.id)}
                         >Xác nhận</button>
                         <button 
                             className="btn btn-secondary"
@@ -70,4 +44,4 @@ function RequesterList(){
     )
 }
 
-export default RequesterList;
+export default ListRequester;

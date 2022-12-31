@@ -20,33 +20,36 @@ import ProfileComponent from "./components/Profile/ProfileComponent";
 import Event from "./utils/Event";
 import PrivateRoute from "./utils/PrivateRoute";
 import Search from "./components/Search/Search";
-import RequesterList from "./components/Friend/RequesterList";
+import RequesterList from "./components/Friend/ListRequester";
+import NotificationList from "./components/Notification/NotificationList";
+import { io } from "socket.io-client";
+import SearchUp from "./components/Search/Search";
 import Navbar from "./Navbar";
-import {io} from "socket.io-client";
-
 const socket = io.connect("ws://localhost:8900");
 
 function App() {
-
   const [currentUser, setCurrentUser] = useState(undefined);
 
   const user = AuthService.getCurrentUser();
+  const socket = useRef()
 
   const dispatch = useDispatch();
   dispatch(setSocket(socket));
   
-  useEffect(() => {
+  // useEffect(() => {
       
-    return () => {
-      socket.current.close();
-    }
+  //   return () => {
+  //     socket.current.close();
+  //   }
 
-  },[]);
+  // },[]);
 
   useEffect(() => {
 
     if (user) {
       setCurrentUser(user);
+      socket.current = io.connect("ws://localhost:8900")
+      socket.current.emit("addUser",user.id)
     }
 
     Event.on("logout", () => {

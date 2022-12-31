@@ -12,11 +12,16 @@ import ButtonFriend from '../Friend/ButtonFriend';
 import { Routes, Route, Link } from "react-router-dom";
 import Post from "../Post/Post"
 import UserService from "../../services/user.service";
+import CardUser from '../Friend/CardUser';
+import FriendService from '../../services/FriendService';
 
 function ProfileComponent() {
 
     const [isCurrentProfile,setIsCurrentProfile] = useState()
     const currentUser = AuthService.getCurrentUser();
+
+    //0:timeline, 1:listFriend
+    const [stateSwitch,setStateSwitch] = useState(0)
 
     const [userProfileID,setUserProfileID] = useState(0)
     const [firstName,setFirstName] = useState('')
@@ -34,8 +39,7 @@ function ProfileComponent() {
     const [uploadBackground,setUploadBackground] = useState(null);
 
     const [posts,setPosts] = useState([]);
-    
-
+    const [listFriend,setListFriend] = useState([]);
 
     const OldImage = useRef(null);
     const OldBackground = useRef(null);
@@ -52,7 +56,10 @@ function ProfileComponent() {
             setLocationID(response.data.locationID);
             getImageFromFirebase(response.data.avatar,response.data.background)
             setUserName(response.data.user.username)
+            setStateSwitch(0)
+            setPosts([])
         })
+        FriendService.getListFriend(userID).then(res => setListFriend(res.data))
         getUserPost()
         checkCurrentUserProfile()
     },[userID])
@@ -65,6 +72,11 @@ function ProfileComponent() {
     }
    }
 
+  //  const handleChangeStateSwitch = (e,idState) => {
+  //   console.log(e.target);
+  //     e.target.classList.toggle("active")
+  //     setStateSwitch(idState) 
+  //  }
 
 
     const getImageFromFirebase=(avatar,background)=>{
@@ -214,12 +226,7 @@ function ProfileComponent() {
             , height:"600px"}}>
               </div>
       </figure>
-			<div className="add-btn">
-      {!isCurrentProfile && <ButtonFriend 
-              userID = {userID} 
-              // handle = {handleChange()}
-          />}
-			</div>
+
 			<form className="edit-phto">
 				<i className="fa fa-camera-retro"></i>
 				<label className="fileContainer">
@@ -249,18 +256,22 @@ function ProfileComponent() {
 								<li className="admin-name">
 								  <h5>{firstName} {lastName}</h5>
 								</li>
-								<li>
-									<Link className="active" title="" data-ripple="">time line</Link>
+								<li style={{marginRight: "150px"}}>
+									<Link className="" onClick={() => setStateSwitch(0)}>Time Line</Link>
 									<Link className=""  title="" data-ripple="">Photos</Link>
 									<Link className=""  title="" data-ripple="">Videos</Link>
-									<Link className=""  title="" data-ripple="">Friends</Link>
+									{isCurrentProfile && <Link className=""  onClick={() => setStateSwitch(1)}>Friends</Link>}
 									<Link className=""  title="" data-ripple="">Groups</Link>
 									<Link className=""  title="" data-ripple="">about</Link>
 									<Link className=""  title="" data-ripple="">more</Link>
 								</li>
+                <li >
+                    {!isCurrentProfile && <ButtonFriend userID = {userID} />}
+                </li>
 							</ul>
 						</div>
 					</div>
+          
 				</div>
 			</div>
 		</div>
@@ -342,19 +353,15 @@ function ProfileComponent() {
 								</aside>
 							</div>
 							<div className="col-lg-6">
-								<div className="loadMore">	
-								<div className="central-meta item">
-						
-								{
-									posts.map(
-									(post) =>
-                  <div key={post.id}>
-                                      <Post data={post}/>
-
-                  </div>
-                  )}
-									
-								</div>
+								<div className="loadMore">
+                  {stateSwitch == 0 ? <div className="central-meta item">
+                    {posts.map((post) =>
+                        <div key={post.id}>
+                            <Post data={post}/>
+                        </div>
+                      )}
+                  </div> : <ListFriend userCurrentID = {currentUser.id}/>}
+                {}
 								</div>
 							</div>
 							<div className="col-lg-3">
@@ -362,7 +369,9 @@ function ProfileComponent() {
 									<div className="widget friend-list stick-widget">
 										<h4 className="widget-title">Friends</h4>
 										<ul id="people-list" className="friendz-list">
-                    {userID && <ListFriend userID = {userID}/>}			
+                        {listFriend.map((user) => (
+                          <CardUser user = {user}/>
+                        ))}		
 										</ul>
 										
 									</div>

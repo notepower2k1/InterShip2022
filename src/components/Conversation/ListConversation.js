@@ -71,14 +71,10 @@ function ListConversation() {
   
 
     useEffect(() =>{
-     
-        socket.emit("addUser",user.id);
-        socket.on("getUsers",users=>{
-  
+        socket.current.emit("addUser",user.id);
+        socket.current.on("getUsers",users=>{
           setOnlineUsers(users);
         })
-      
-    
     },[])
 
     const handleClick = (index,conversation)=>{

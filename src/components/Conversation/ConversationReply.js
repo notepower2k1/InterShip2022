@@ -2,7 +2,7 @@ import React ,{useState ,useEffect,useRef} from 'react'
 import AuthService from '../../services/auth.service'
 import conversationService from '../../services/conversationService'
 import ProfileService from '../../services/ProfileService';
-import FirebaseSerive from '../../services/firebaseService';
+import FirebaseService from '../../services/firebaseService';
 
 function ConversationReply({increaseRenderValue,socket,renderValue,currentConversation}) {
 
@@ -94,7 +94,7 @@ function ConversationReply({increaseRenderValue,socket,renderValue,currentConver
 
   const getAvatar = async (id) =>{
     ProfileService.getProfile(id).then((response) => {
-      FirebaseSerive.getAvatarFromFirebase(response.data.avatar).then((response) => {
+      FirebaseService.getAvatarFromFirebase(response.data.avatar).then((response) => {
           setAvatar(response);
       })  
   })

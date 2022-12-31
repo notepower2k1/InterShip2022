@@ -4,9 +4,16 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
 import ProfileService from './services/ProfileService';
 import FirebaseSerive from './services/firebaseService';
+import NotificationList from "./components/Notification/NotificationList";
+import { useSelector } from "react-redux";
+import { io } from "socket.io-client";
 
 function Navbar({user,currentUser,logOut}) {
 
+    const { socket } = useSelector(state => state.socket);
+    
+    socket.current.emit("addUser",currentUser.id);
+    
     const [searchInput, setSearchInput] = useState();
     const [avatar,setAvatar] = useState(null)
 
@@ -16,9 +23,8 @@ function Navbar({user,currentUser,logOut}) {
             FirebaseSerive.getAvatarFromFirebase(response.data.avatar).then((response) => {
                 setAvatar(response)
             })
-            
         })
-
+        
     },[])
 
 
@@ -82,12 +88,14 @@ function Navbar({user,currentUser,logOut}) {
                 </InputGroup>
               
             </li>
-				<li>
+				{/* <li>
 					<Link href="#" title="Notification" data-ripple="">
 						<i className="fa-2x fa fa-bell"></i><span></span>
 					</Link>
 				
-				</li>
+				</li> */}
+        <NotificationList currentUser = {currentUser}/>
+        
 				<li>
 					<Link to={"/conversation/" + user.id} title="Messages" data-ripple=""><i className="fa-2x fa fa-comment"></i><span></span></Link>
 					

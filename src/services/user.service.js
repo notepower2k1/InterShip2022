@@ -4,6 +4,10 @@ const getPublicContent = () => {
   return rootInstance.get("/all");
 };
 
+const getUserById =  async (id) => {
+  return await rootInstance.get("user/" + id);
+}
+
 const getUserBoard = () => {
   return rootInstance.get("/user");
 };
@@ -25,7 +29,7 @@ const joinGroup = (groupId, userId) => {
 }
 
 const getByUserID = (userId) =>{
-  return rootInstance.get("/user" + userId);
+  return rootInstance.get("/user/" + userId);
 }
 
 const UserService = {

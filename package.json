@@ -3,11 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@atlaskit/button": "^16.4.1",
-    "@atlaskit/form": "^8.7.1",
-    "@atlaskit/icon": "^21.11.2",
-    "@atlaskit/textarea": "^4.5.2",
-    "@atlaskit/textfield": "^5.3.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
