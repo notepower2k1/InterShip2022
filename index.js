@@ -28,9 +28,8 @@ io.on("connection", (socket)=>{
 
         io.emit("getUsers",users);
     })
+
     //send and get message
-
-
     socket.on("sendMessage",({senderID,receiverID,text})=>{
         const user = getUser(receiverID);
         if (user) {
@@ -41,6 +40,15 @@ io.on("connection", (socket)=>{
         }
       
     });
+
+    //send and get notification
+    socket.on("sendNotification",(noty) => {
+        const user = getUser(noty.recipient.id);
+        console.log(user)
+        if (user) {
+            io.to(user.socketID).emit("getNotification",noty)
+        }
+    })
 
     //when disconnect
     socket.on("disconnect",()=>{
