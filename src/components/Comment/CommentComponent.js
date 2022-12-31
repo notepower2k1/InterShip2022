@@ -68,7 +68,7 @@ function CommentComponent({post}) {
     });
     
     setInputComment('');
-    console.log(temp);
+    
   }
 
   
