@@ -75,36 +75,36 @@ const UserForm = (data) => {
     };
   
       return(
-        <Alert variant='primary'>
-        <Container>
-        <Form onSubmit={submitActionHandler} id="data">
-        {/* <Form.Group controlId="form.UserID">
-            <Form.Label>User ID</Form.Label>
-            <Form.Control type="number" value={userID} onChange={userIDChangeHandler} placeholder="Enter User ID" required disabled/>
-        </Form.Group> */}
-        <Form.Group  controlId="form.Username">
-            <Form.Label>Username</Form.Label>
-            <Form.Control type="text" value={userName} onChange={usernameChangeHandler} placeholder="Enter Username" required/>
-        </Form.Group>
-        <Form.Group  controlId="form.Email">
-            <Form.Label>Email</Form.Label>
-            <Form.Control type="email" value={userEmail} onChange={emailChangeHandler} placeholder="Enter Email" required/>
-        </Form.Group>
-        <Form.Group  controlId="form.Password">
-            <Form.Label>Password</Form.Label>
-            <Form.Control type="password" value={userPassword} onChange={passwordChangeHandler} placeholder="Enter Password" required/>
-        </Form.Group>
-        <Form.Group  controlId="form.RegisteredDate">
-            <Form.Label>Registered Date</Form.Label>
-            <Form.Control type="date" value={userRegisteredDate} onChange={registeredDateChangeHandler} placeholder="Enter Registered Date" required/>
-        </Form.Group>
-        <br></br>
-        <Button type='submit'>Update User</Button>
-        &nbsp;&nbsp;&nbsp;
-        <Button type='submit' onClick={()=>navigate("/user/read")}>Cancel</Button>
-      </Form>
-      </Container>
-      </Alert>
+        // Thêm className = "content-wrapper" vào tránh Navbar che chữ
+        <div className="content-wrapper">
+          <Alert variant='primary'>
+            <Container>
+              <Form onSubmit={submitActionHandler} id="data">
+              <Form.Group  controlId="form.Username">
+                  <Form.Label>Username</Form.Label>
+                  <Form.Control type="text" value={userName} onChange={usernameChangeHandler} placeholder="Enter Username" required/>
+              </Form.Group>
+              <Form.Group  controlId="form.Email">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control type="email" value={userEmail} onChange={emailChangeHandler} placeholder="Enter Email" required/>
+              </Form.Group>
+              <Form.Group  controlId="form.Password">
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control type="password" value={userPassword} onChange={passwordChangeHandler} placeholder="Enter Password" required/>
+              </Form.Group>
+              <Form.Group  controlId="form.RegisteredDate">
+                  <Form.Label>Registered Date</Form.Label>
+                  <Form.Control type="date" value={userRegisteredDate} onChange={registeredDateChangeHandler} placeholder="Enter Registered Date" required/>
+              </Form.Group>
+              <br></br>
+              <Button type='submit'>Update User</Button>
+              &nbsp;&nbsp;&nbsp;
+              <Button type='submit' onClick={()=>navigate("/user/read")}>Cancel</Button>
+            </Form>
+            </Container>
+          </Alert>
+        </div>
+       
   
       );
   }

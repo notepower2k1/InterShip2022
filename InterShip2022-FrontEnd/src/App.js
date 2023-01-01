@@ -18,7 +18,6 @@ import PrivateRoute from "./utils/PrivateRoute";
 import Search from "./components/Search/Search";
 
 import Chart from "./components/Admin/Statitics/Chart";
-import CountRow from './components/Admin/Statitics/CoutRow';
 
 import PostDataTable from './components/Admin/Post/PostDataTable';
 
@@ -37,6 +36,10 @@ import GroupDataTable from './components/Admin/Group/GroupDataTable';
 import AddLocation from './components/Admin/Location/AddLocation';
 import EditLocation from './components/Admin/Location/EditLocation';
 import LocationDataTable from './components/Admin/Location/LocationDataTable';
+
+import Header from './components/Admin/Template/Header';
+import SideBar from './components/Admin/Template/SideBar.js';
+
 function App() {
 
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -65,113 +68,11 @@ function App() {
   };
 
   return (
-    <div className="theme-layout">
-      <div className="topbar stick">
-        <div className="logo">
-          <a title="" href="newsfeed.html"><img src="images/logo.png" alt="" /></a>
-        </div>
-        
-        <div className="top-area">
-          <ul className="main-menu">
-            <li>
-              <Link to={"/"}>
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link to={"/posts"}>
-                Posts
-              </Link>
-            </li>
-            <li>
-              <Link to={"/groups"}>
-                Groups
-              </Link>
-            </li>
-            <li>
-              <Link to={"chart"}>
-                Charts
-              </Link>
-            </li>
-            <li>
-              <Link to={"countRow"}>
-                Count Row
-              </Link>
-            </li>
-          </ul>
-          <ul className="setting-area">
-            <li >
-                <input 
-                    type="text"  
-                    className="form-control "
-                    placeholder="Search..." 
-                    onChange={(e) => setSearchInput(e.target.value)}
-                />
-              
-            </li>
-            <li>{user && <Link to={"/search/" + searchInput}>
-            <a href="#" title="Home" className="" data-ripple=""><i className="ti-search"></i></a>
-            </Link>}
-               
-            </li>     
-          </ul>
-          <div className="user-img">
-          { user &&  <Link to={"/profile/" + user.id}>
-          <img src="images/resources/admin.jpg" alt="" />
-
-          </Link> }
-            <span className="status f-online"></span>
-            <div className="user-setting">
-              <a href="#" title=""><span className="status f-online"></span>online</a>
-              <a href="#" title=""><span className="status f-away"></span>away</a>
-              <a href="#" title=""><span className="status f-off"></span>offline</a>
-              <a href="#" title=""><i className="ti-user"></i> view profile</a>
-              <a href="#" title=""><i className="ti-pencil-alt"></i>edit profile</a>
-              <a href="#" title=""><i className="ti-target"></i>activity log</a>
-              <a href="#" title=""><i className="ti-settings"></i>account setting</a>
-              <a href="#" title=""><i className="ti-power-off"></i>log out</a>
-            </div>
-          </div>
-          <span className="ti-menu main-menu" data-ripple=""></span>
-        </div>
-      </div>
-     
-      <nav className="navbar navbar-expand navbar-dark bg-dark">
-
-        {currentUser ? (
-          <div className="navbar-nav ml-auto">
-            <li className="nav-item">
-              <Link to={"/posts"} className="nav-link">
-                Posts
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to={"/profile"} className="nav-link">
-                {currentUser.username}
-              </Link>
-            </li>
-            <li className="nav-item">
-              <a href="/login" className="nav-link" onClick={logOut}>
-                LogOut
-              </a>
-            </li>
-          </div>
-        ) : (
-          <div className="navbar-nav ml-auto">
-            <li className="nav-item">
-              <Link to={"/login"} className="nav-link">
-                Login
-              </Link>
-            </li>
-
-            <li className="nav-item">
-              <Link to={"/register"} className="nav-link">
-                Sign Up
-              </Link>
-            </li>
-          </div>
-        )}
-      </nav>
+    <div class="wrapper">
+      <Header/>
+      <SideBar/>
+      {/* <Dashboard/> */}
+      {/* <Footer/> */}
 
       <div className="mt-3">
         <Routes>
@@ -202,40 +103,210 @@ function App() {
           } />
 
 
-        <Route path="/profile/:userID" element={
-            <PrivateRoute>
-              <ProfileComponent />
-            </PrivateRoute>
-          } />
-        <Route path="/search/:keyword" element={
-            <PrivateRoute>
-              <Search />
-            </PrivateRoute>
-          } />
+          <Route path="/profile/:userID" element={
+              <PrivateRoute>
+                <ProfileComponent />
+              </PrivateRoute>
+            } />
+          <Route path="/search/:keyword" element={
+              <PrivateRoute>
+                <Search />
+              </PrivateRoute>
+            } />
 
-        <Route exact path="user/read" element={<UserDataTable/>}/>
-        <Route exact path="user/create" element={<AddUser/>}/>
-        <Route path="user/edit/:id" element={<EditUser/>}/>
+          <Route exact path="user/read" element={<UserDataTable/>}/>
+          <Route exact path="user/create" element={<AddUser/>}/>
+          <Route path="user/edit/:id" element={<EditUser/>}/>
 
-        <Route exact path="user-role/read" element={<UserRoleDataTable/>}/>
-        <Route exact path="user-role/create" element={<AddUserRole/>}/>W
-        <Route path="user-role/edit/:userID/:roleID" element={<EditUserRole/>}/>
+          <Route exact path="user-role/read" element={<UserRoleDataTable/>}/>
+          <Route exact path="user-role/create" element={<AddUserRole/>}/>W
+          <Route path="user-role/edit/:userID/:roleID" element={<EditUserRole/>}/>
 
-        <Route exact path="group/read" element={<GroupDataTable/>}/>
-        <Route exact path="group/create" element={<AddGroup/>}/>
-        <Route path="group/edit/:id" element={<EditGroup/>}/>
+          <Route exact path="group/read" element={<GroupDataTable/>}/>
+          <Route exact path="group/create" element={<AddGroup/>}/>
+          <Route path="group/edit/:id" element={<EditGroup/>}/>
 
-        <Route exact path="location/read" element={<LocationDataTable/>}/>
-        <Route exact path="location/create" element={<AddLocation/>}/>
-        <Route path="location/edit/:id" element={<EditLocation/>}/>
+          <Route exact path="location/read" element={<LocationDataTable/>}/>
+          <Route exact path="location/create" element={<AddLocation/>}/>
+          <Route path="location/edit/:id" element={<EditLocation/>}/>
 
-        <Route exact path="post/read" element={<PostDataTable/>}/>
-        <Route exact path="chart" element={<Chart/>}/>
-        <Route exact path="countRow" element={<CountRow/>}/>
+          <Route exact path="post/read" element={<PostDataTable/>}/>
+          <Route exact path="chart" element={<Chart/>}/>
 
         </Routes>
       </div>
     </div>
+    // <div className="theme-layout">
+    //   <div className="topbar stick">
+    //     <div className="logo">
+    //       <a title="" href="newsfeed.html"><img src="images/logo.png" alt="" /></a>
+    //     </div>
+        
+    //     <div className="top-area">
+    //       <ul className="main-menu">
+    //         <li>
+    //           <Link to={"/"}>
+    //             Home
+    //           </Link>
+    //         </li>
+    //         <li>
+    //           <Link to={"/posts"}>
+    //             Posts
+    //           </Link>
+    //         </li>
+    //         <li>
+    //           <Link to={"/groups"}>
+    //             Groups
+    //           </Link>
+    //         </li>
+    //         <li>
+    //           <Link to={"chart"}>
+    //             Charts
+    //           </Link>
+    //         </li>
+    //         <li>
+    //           <Link to={"countRow"}>
+    //             Count Row
+    //           </Link>
+    //         </li>
+    //       </ul>
+    //       <ul className="setting-area">
+    //         <li >
+    //             <input 
+    //                 type="text"  
+    //                 className="form-control "
+    //                 placeholder="Search..." 
+    //                 onChange={(e) => setSearchInput(e.target.value)}
+    //             />
+              
+    //         </li>
+    //         <li>{user && <Link to={"/search/" + searchInput}>
+    //         <a href="#" title="Home" className="" data-ripple=""><i className="ti-search"></i></a>
+    //         </Link>}
+               
+    //         </li>     
+    //       </ul>
+    //       <div className="user-img">
+    //       { user &&  <Link to={"/profile/" + user.id}>
+    //       <img src="images/resources/admin.jpg" alt="" />
+
+    //       </Link> }
+    //         <span className="status f-online"></span>
+    //         <div className="user-setting">
+    //           <a href="#" title=""><span className="status f-online"></span>online</a>
+    //           <a href="#" title=""><span className="status f-away"></span>away</a>
+    //           <a href="#" title=""><span className="status f-off"></span>offline</a>
+    //           <a href="#" title=""><i className="ti-user"></i> view profile</a>
+    //           <a href="#" title=""><i className="ti-pencil-alt"></i>edit profile</a>
+    //           <a href="#" title=""><i className="ti-target"></i>activity log</a>
+    //           <a href="#" title=""><i className="ti-settings"></i>account setting</a>
+    //           <a href="#" title=""><i className="ti-power-off"></i>log out</a>
+    //         </div>
+    //       </div>
+    //       <span className="ti-menu main-menu" data-ripple=""></span>
+    //     </div>
+    //   </div>
+     
+    //   <nav className="navbar navbar-expand navbar-dark bg-dark">
+
+    //     {currentUser ? (
+    //       <div className="navbar-nav ml-auto">
+    //         <li className="nav-item">
+    //           <Link to={"/posts"} className="nav-link">
+    //             Posts
+    //           </Link>
+    //         </li>
+    //         <li className="nav-item">
+    //           <Link to={"/profile"} className="nav-link">
+    //             {currentUser.username}
+    //           </Link>
+    //         </li>
+    //         <li className="nav-item">
+    //           <a href="/login" className="nav-link" onClick={logOut}>
+    //             LogOut
+    //           </a>
+    //         </li>
+    //       </div>
+    //     ) : (
+    //       <div className="navbar-nav ml-auto">
+    //         <li className="nav-item">
+    //           <Link to={"/login"} className="nav-link">
+    //             Login
+    //           </Link>
+    //         </li>
+
+    //         <li className="nav-item">
+    //           <Link to={"/register"} className="nav-link">
+    //             Sign Up
+    //           </Link>
+    //         </li>
+    //       </div>
+    //     )}
+    //   </nav>
+
+    //   <div className="mt-3">
+    //     <Routes>
+    //       {/* Cần thêm feature khi jwt expired thì redirect user về /login */}
+    //       <Route path="/login" element={<Login/>} />
+    //       <Route path="/register" element={<Register/>} />
+    //       <Route path="/profile" element={<Profile/>} />
+    //       {/* Thêm privateroute vào các route cần auth mới truy cập được */}
+    //       <Route path="/posts" element={
+    //         <PrivateRoute>
+    //           <PostList />
+    //         </PrivateRoute>
+    //       } />
+    //       <Route path="/groups" element={
+    //         <PrivateRoute>
+    //           <GroupList />
+    //         </PrivateRoute>
+    //       } />
+    //       <Route path="/group/create" element={
+    //         <PrivateRoute>
+    //           <GroupCreate />
+    //         </PrivateRoute>
+    //       } />
+    //       <Route path="/group/:id" element={
+    //         <PrivateRoute>
+    //           <GroupPage />
+    //         </PrivateRoute>
+    //       } />
+
+
+    //     <Route path="/profile/:userID" element={
+    //         <PrivateRoute>
+    //           <ProfileComponent />
+    //         </PrivateRoute>
+    //       } />
+    //     <Route path="/search/:keyword" element={
+    //         <PrivateRoute>
+    //           <Search />
+    //         </PrivateRoute>
+    //       } />
+
+    //     <Route exact path="user/read" element={<UserDataTable/>}/>
+    //     <Route exact path="user/create" element={<AddUser/>}/>
+    //     <Route path="user/edit/:id" element={<EditUser/>}/>
+
+    //     <Route exact path="user-role/read" element={<UserRoleDataTable/>}/>
+    //     <Route exact path="user-role/create" element={<AddUserRole/>}/>W
+    //     <Route path="user-role/edit/:userID/:roleID" element={<EditUserRole/>}/>
+
+    //     <Route exact path="group/read" element={<GroupDataTable/>}/>
+    //     <Route exact path="group/create" element={<AddGroup/>}/>
+    //     <Route path="group/edit/:id" element={<EditGroup/>}/>
+
+    //     <Route exact path="location/read" element={<LocationDataTable/>}/>
+    //     <Route exact path="location/create" element={<AddLocation/>}/>
+    //     <Route path="location/edit/:id" element={<EditLocation/>}/>
+
+    //     <Route exact path="post/read" element={<PostDataTable/>}/>
+    //     <Route exact path="chart" element={<Chart/>}/>
+    //     <Route exact path="countRow" element={<CountRow/>}/>
+
+    //     </Routes>
+    //   </div>
+    // </div>
   );
 }
 export default App;

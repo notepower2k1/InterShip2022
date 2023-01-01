@@ -47,6 +47,9 @@ const UserRoleDataTable = () => {
  
 
   return (
+    // Thêm className = "content-wrapper" vào tránh Navbar che chữ
+    <div className="content-wrapper" >
+
     <div class="card-body" style={{textAlign:'center'}}>
       <br>
       </br>
@@ -113,6 +116,8 @@ const UserRoleDataTable = () => {
       </div>
 
     </div>
+  </div>
+    
 
   );
 }

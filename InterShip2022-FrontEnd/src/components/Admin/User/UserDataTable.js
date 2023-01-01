@@ -8,6 +8,7 @@ import deleteLogo from '../../../images/delete.png';
 
 import UserService from "../../../services/user.service";
 
+
 const UserDataTable = () => {
 
   const navigate = useNavigate();
@@ -44,16 +45,18 @@ const UserDataTable = () => {
  
 
   return (
-    <div class="card-body" style={{textAlign:'center'}}>
-      <br>
-      </br>
-      <nav>
-        <button
-          className="btn btn-primary nav-item active"
-          onClick={() => navigate("/user/create")}>
-          Create New User
-        </button>
-      </nav>
+    // Thêm className = "content-wrapper" vào tránh Navbar che chữ
+    <div className="content-wrapper" >
+      <div class="card-body" style={{textAlign:'center'}}>
+            <br>
+            </br>
+            <nav>
+              <button
+                className="btn btn-primary nav-item active"
+                onClick={() => navigate("/user/create")}>
+                Create New User
+              </button>
+            </nav>
 
 
       <br></br>
@@ -113,6 +116,8 @@ const UserDataTable = () => {
       </div>
 
     </div>
+    </div>
+   
 
   );
 }

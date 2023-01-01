@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import { Form, Button, Container, Alert } from 'react-bootstrap';
+import GroupService from "../../../services/group.service";
 
 const GroupForm = () => {
 // Gán Url luôn thì bị lỗi: has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
@@ -29,17 +30,16 @@ const GroupForm = () => {
   };
 
 
-  const submitActionHandler = (event) => {
+  const submitActionHandler = async (event) => {
     event.preventDefault();
-    axios
-      .post("/api/user", {
+    await GroupService.createGroup( {
         // groupID: enteredGroupID,
         groupName: enteredGroupName,
         groupAbout: enteredGroupAbout,
         createdDate: enteredCreatedDate
       })
       .then((response) => {
-        alert("Group  "+ enteredGroupAbout +" added!");
+        alert("Group "+ enteredGroupAbout +" added!");
         navigate("/group/read");
       }).catch(error => {
         alert("error==="+error);
@@ -57,33 +57,33 @@ const GroupForm = () => {
 
   }
     return(
-      <Alert variant='primary'>
-      <Container>
-      <Form onSubmit={submitActionHandler}>
-        {/* <Form.Group controlId="form.GroupID">
-            <Form.Label>Group ID</Form.Label>
-            <Form.Control type="number" value={enteredGroupID} onChange={groupIDChangeHandler} placeholder="Enter Group ID" required/>
-        </Form.Group> */}
-         <Form.Group  controlId="form.GroupName">
-            <Form.Label>Group Name</Form.Label>
-            <Form.Control type="text" value={enteredGroupName} onChange={groupNameChangeHandler} placeholder="Enter Group Name" required/>
-        </Form.Group>
-        <Form.Group  controlId="form.GroupAbout">
-            <Form.Label>About</Form.Label>
-            <Form.Control type="text" value={enteredGroupAbout} onChange={groupAboutChangeHandler} placeholder="Enter Group About" required/>
-        </Form.Group>
-        <Form.Group  controlId="form.CreatedDate">
-            <Form.Label>Created Date</Form.Label>
-            <Form.Control type="date" value={enteredCreatedDate} onChange={createdDateChangeHandler} placeholder="Enter Created Date" required/>
-        </Form.Group>
-        <br></br>
-        <Button type='submit'>Add User</Button>
-        &nbsp;&nbsp;&nbsp;
-        <Button type='submit' onClick={()=>cancelHandler()}>Cancel</Button>
-      </Form>
+      // Thêm className = "content-wrapper" vào tránh Navbar che chữ
+      <div className="content-wrapper">
+        <Alert variant='primary'>
+          <Container>
+              <Form onSubmit={submitActionHandler}>
+                <Form.Group  controlId="form.GroupName">
+                    <Form.Label>Group Name</Form.Label>
+                    <Form.Control type="text" value={enteredGroupName} onChange={groupNameChangeHandler} placeholder="Enter Group Name" required/>
+                </Form.Group>
+                <Form.Group  controlId="form.GroupAbout">
+                    <Form.Label>About</Form.Label>
+                    <Form.Control type="text" value={enteredGroupAbout} onChange={groupAboutChangeHandler} placeholder="Enter Group About" required/>
+                </Form.Group>
+                <Form.Group  controlId="form.CreatedDate">
+                    <Form.Label>Created Date</Form.Label>
+                    <Form.Control type="date" value={enteredCreatedDate} onChange={createdDateChangeHandler} placeholder="Enter Created Date" required/>
+                </Form.Group>
+                <br></br>
+                <Button type='submit'>Add User</Button>
+                &nbsp;&nbsp;&nbsp;
+                <Button type='submit' onClick={()=>cancelHandler()}>Cancel</Button>
+              </Form>
 
-    </Container>
-    </Alert>
+          </Container>
+        </Alert>
+      </div>
+     
 
     );
 }

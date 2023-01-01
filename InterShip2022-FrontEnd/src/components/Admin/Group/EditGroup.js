@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {useParams, useNavigate} from "react-router-dom";
 import axios from "axios";
 import { Form, Button, Container, Alert } from 'react-bootstrap';
+import GroupService from "../../../services/group.service";
 
 const GroupForm = () => {
 // Gán Url luôn thì bị lỗi: has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
@@ -15,9 +16,9 @@ const GroupForm = () => {
 
   useEffect(() => {
 
-    axios.get("/api/group/" + param.id).then((response) => {
+    GroupService.readGroupById(param.id).then((response) => {
       const group = response.data;
-      setGroupID(group.groupID);
+      setGroupID(group.id);
       setGroupName(group.groupName);
       setGroupAbout(group.groupAbout)
       setCreatedDate(group.createdDate);
@@ -43,11 +44,11 @@ const GroupForm = () => {
       setCreatedDate(event.target.value);
     };
 
-    const submitActionHandler = (event) => {
+    const submitActionHandler = async (event) => {
       event.preventDefault();
-      axios
-        .put("/api/group/" + param.id, {
-          groupID: groupID,
+      await GroupService.updateGroup(
+        {
+          id: groupID,
           groupName: groupName,
           groupAbout: groupAbout,
           createdDate: createdDate
@@ -63,33 +64,33 @@ const GroupForm = () => {
     };
   
       return(
+      // Thêm className = "content-wrapper" vào tránh Navbar che chữ
+      <div className="content-wrapper">
         <Alert variant='primary'>
-        <Container>
-        <Form onSubmit={submitActionHandler}>
-        {/* <Form.Group controlId="form.GroupID">
-            <Form.Label>Group ID</Form.Label>
-            <Form.Control type="number" value={enteredGroupID} onChange={groupIDChangeHandler} placeholder="Enter Group ID" required/>
-        </Form.Group> */}
-         <Form.Group  controlId="form.GroupName">
-            <Form.Label>Group Name</Form.Label>
-            <Form.Control type="text" value={groupName} onChange={groupNameChangeHandler} placeholder="Enter Group Name" required/>
-        </Form.Group>
-        <Form.Group  controlId="form.GroupAbout">
-            <Form.Label>About</Form.Label>
-            <Form.Control type="text" value={groupAbout} onChange={groupAboutChangeHandler} placeholder="Enter Group About" required/>
-        </Form.Group>
-        <Form.Group  controlId="form.CreatedDate">
-            <Form.Label>Created Date</Form.Label>
-            <Form.Control type="date" value={createdDate} onChange={createdDateChangeHandler} placeholder="Enter Created Date" required/>
-        </Form.Group>
-        <br></br>
-        <Button type='submit'>Update Group</Button>
-        &nbsp;&nbsp;&nbsp;
-        <Button type='submit' onClick={()=>navigate("/group/read")}>Cancel</Button>
-      </Form>
-      </Container>
-      </Alert>
+            <Container>
+                <Form onSubmit={submitActionHandler}>
+                <Form.Group  controlId="form.GroupName">
+                    <Form.Label>Group Name</Form.Label>
+                    <Form.Control type="text" value={groupName} onChange={groupNameChangeHandler} placeholder="Enter Group Name" required/>
+                </Form.Group>
+                <Form.Group  controlId="form.GroupAbout">
+                    <Form.Label>About</Form.Label>
+                    <Form.Control type="text" value={groupAbout} onChange={groupAboutChangeHandler} placeholder="Enter Group About" required/>
+                </Form.Group>
+                <Form.Group  controlId="form.CreatedDate">
+                    <Form.Label>Created Date</Form.Label>
+                    <Form.Control type="date" value={createdDate} onChange={createdDateChangeHandler} placeholder="Enter Created Date" required/>
+                </Form.Group>
+                <br></br>
+                <Button type='submit'>Update Group</Button>
+                &nbsp;&nbsp;&nbsp;
+                <Button type='submit' onClick={()=>navigate("/group/read")}>Cancel</Button>
+              </Form>
+          </Container>
+        </Alert>
   
+      </div>
+        
       );
   }
   export default GroupForm;

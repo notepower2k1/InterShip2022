@@ -8,6 +8,7 @@ import UserService from "../../../services/user.service";
 import PostService from "../../../services/post.service";
 import GroupService from "../../../services/group.service";
 
+
 // Import hết luôn tránh bị lỗi lúc chuyển Chart
 import "chart.js/auto";
 ChartJS.register(
@@ -286,109 +287,221 @@ const Chart = () => {
   // Render lại khi selectedYear thay đổi
 
   return (
-    // Grid
-    <div className='row'>
-        <div>
-          Total User: {users.length}
-          <br></br>
-          Total Post: {posts.length}
-          <br></br>
-          Total Group: {groups.length}
-          
+    // Thêm className = "content-wrapper" vào tránh Navbar che chữ
+    <div className="content-wrapper">
+      <section className="content">
+        <div className="container-fluid">
+               {/* Small boxes (Stat box) */}
+        <div className="row">
+          <div className="col-lg-3 col-6">
+            {/* small box */}
+            <div className="small-box bg-info">
+              <div className="inner">
+                <h3>{users.length}</h3>
+                <p style={{color: 'white'}}>User Registrations</p>
+              </div>
+              <div className="icon">
+                <i className="ion ion-person-add" />
+              </div>
+              {/* <a href="#" className="small-box-footer">More info <i className="fas fa-arrow-circle-right" /></a> */}
+            </div>
+          </div>
+          {/* ./col */}
+          <div className="col-lg-3 col-6">
+            {/* small box */}
+            <div className="small-box bg-success">
+              <div className="inner">
+                <h3>{posts.length}<sup style={{fontSize: 20}}></sup></h3>
+                <p style={{color: 'white'}}>Posts Published</p>
+              </div>
+              <div className="icon">
+                <i className="ion ion-stats-bars" />
+              </div>
+              {/* <a href="#" className="small-box-footer">More info <i className="fas fa-arrow-circle-right" /></a> */}
+            </div>
+          </div>
+          {/* ./col */}
+          <div className="col-lg-3 col-6">
+            {/* small box */}
+            <div className="small-box bg-warning">
+              <div className="inner">
+                <h3 style={{color: 'white'}}>{groups.length}</h3>
+                <p style={{color: 'white'}}>Total Group</p>
+              </div>
+              <div className="icon">
+                <i className="ion ion-person-add" />
+              </div>
+              {/* <a href="#" className="small-box-footer">More info <i className="fas fa-arrow-circle-right" /></a> */}
+            </div>
+            
+          </div>
+          <div className="col-lg-3 col-6">
+          <div class="small-box bg-danger">
+              <div class="inner">
+                <h3 style={{color: 'white'}}>65</h3>
+
+                <p style={{color: 'white'}}>Chua nghi ra</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-pie-graph"></i>
+              </div>
+              {/* <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> */}
+            </div>
+          </div>
+          {/* ./col */}
         </div>
-    {/* Đổi thành BarChart, LineChart, PieChart, DoughnutChart tuỳ ý
-    {/* Thêm thẻ ul để hiển thị nhiều Chart */}
-    {/* col-..., mt-..., me-..., ... */}
-       <ul className='col-12'>
-        <Bar
-              height = {400}
-              data = {totalUserByYear}
-              options = {options}
-          />
-       </ul>
+        <div className="card card-success mt-5">
+          <div className="card-header">
+            <h3 className="card-title">Total User Register By Year</h3>
+            <div className="card-tools">
+              <button type="button" className="btn btn-tool" data-card-widget="collapse">
+                <i className="fas fa-minus" />
+              </button>
+              <button type="button" className="btn btn-tool" data-card-widget="remove">
+                <i className="fas fa-times" />
+              </button>
+            </div>
+          </div>
+          <div className="card-body">
+            <div className="chart"><div className="chartjs-size-monitor"><div className="chartjs-size-monitor-expand"><div className /></div><div className="chartjs-size-monitor-shrink"><div className /></div></div>
+              <ul className='col-12'>
+                    {/* Đổi thành BarChart, LineChart, PieChart, DoughnutChart tuỳ ý
+                    {/* Thêm thẻ ul để hiển thị nhiều Chart */}
+                    {/* col-..., mt-..., me-..., ... */}
+                <Pie
+                      height = {400}
+                      data = {totalUserByYear}
+                      options = {options}
+                  />
+            </ul>
+            </div>
+          </div>
+          {/* /.card-body */}
+        </div>
 
-       <ul className='col-12'>
-        <Bar
-              height = {400}
-              data = {totalUserByMonth}
-              options = {options}
-          />
-       </ul>
-      <ul>
+        <div className="card card-info mt-5">
+          <div className="card-header">
+            <h3 className="card-title">Total User Register By Month</h3>
+            <div className="card-tools">
+              <button type="button" className="btn btn-tool" data-card-widget="collapse">
+                <i className="fas fa-minus" />
+              </button>
+              <button type="button" className="btn btn-tool" data-card-widget="remove">
+                <i className="fas fa-times" />
+              </button>
+            </div>
+          </div>
 
+          <div className="card-body">
+            <div className="chart"><div className="chartjs-size-monitor"><div className="chartjs-size-monitor-expand"><div className /></div><div className="chartjs-size-monitor-shrink"><div className /></div></div>
+              <ul className='col-12'>
+                    {/* Đổi thành BarChart, LineChart, PieChart, DoughnutChart tuỳ ý
+                    {/* Thêm thẻ ul để hiển thị nhiều Chart */}
+                    {/* col-..., mt-..., me-..., ... */}
+                <Bar
+                      height = {400}
+                      data = {totalUserByMonth}
+                      options = {options}
+                  />
+            </ul>
 
-      {/* <select value={selectedYearRegister} onChange={(event) => setSelectedYearRegister(event.target.value)}>
-                <option value={2020}>2020</option>
-                <option value={2021}>2021</option>
-                <option value={2022}>2022</option>
-                <option value={2023}>2023</option>
-                <option value={2024}>2024</option>
-      </select> */}
-
-      <select value={selectedYearRegister} onChange={(e) => setSelectedYearRegister(e.target.value)}>
+            <div>
+            <select value={selectedYearRegister} onChange={(e) => setSelectedYearRegister(e.target.value)}>
                 {registered_years && registered_years.map( 
                   (item) =>
                   
                   <option value={item}> {item}</option>
                  )
                 }
-               
-        </select>
+           </select>
+          </div>
+            </div>
+          </div>
+          {/* /.card-body */}
 
-      </ul>
-       <ul className='col-12'>
-       <Bar
-              height = {400}
-              data = {totalPostByYear}
-              options = {options}
-          />
-       </ul>
+ 
 
-       <ul className='col-12'>
-       <Bar
-              height = {400}
-              data = {totalPostByMonth}
-              options = {options}
-          />
-       </ul>
+        </div>
 
-      {/* <select value={selectedYearPublished} onChange={(event) => setSelectedYearPublished(event.target.value)}>
-                <option value={2020}>2020</option>
-                <option value={2021}>2021</option>
-                <option value={2022}>2022</option>
-                <option value={2023}>2023</option>
-                <option value={2024}>2024</option>
-      </select> */}
+        <div className="card card-danger mt-5">
+          <div className="card-header">
+            <h3 className="card-title">Total Post Published By Year</h3>
+            <div className="card-tools">
+              <button type="button" className="btn btn-tool" data-card-widget="collapse">
+                <i className="fas fa-minus" />
+              </button>
+              <button type="button" className="btn btn-tool" data-card-widget="remove">
+                <i className="fas fa-times" />
+              </button>
+            </div>
+          </div>
+          <div className="card-body">
+            <div className="chart"><div className="chartjs-size-monitor"><div className="chartjs-size-monitor-expand"><div className /></div><div className="chartjs-size-monitor-shrink"><div className /></div></div>
+              <ul className='col-12'>
+                    {/* Đổi thành BarChart, LineChart, PieChart, DoughnutChart tuỳ ý
+                    {/* Thêm thẻ ul để hiển thị nhiều Chart */}
+                    {/* col-..., mt-..., me-..., ... */}
+                <Pie
+                      height = {400}
+                      data = {totalPostByYear}
+                      options = {options}
+                  />
+            </ul>
+            </div>
+          </div>
+          {/* /.card-body */}
+        </div>
 
-     <div>
-     <select value={selectedYearPublished} onChange={(e) => setSelectedYearPublished(e.target.value)}>
-                {published_years && published_years.map( 
-                  (item) =>
-                  
-                  <option value={item}> {item}</option>
-                 )
-                }
-               
-        </select>
-     </div>
+        <div className="card card-success mt-5">
+          <div className="card-header">
+            <h3 className="card-title">Total Post Published By Month</h3>
+            <div className="card-tools">
+              <button type="button" className="btn btn-tool" data-card-widget="collapse">
+                <i className="fas fa-minus" />
+              </button>
+              <button type="button" className="btn btn-tool" data-card-widget="remove">
+                <i className="fas fa-times" />
+              </button>
+            </div>
+          </div>
+          <div className="card-body">
+            <div className="chart"><div className="chartjs-size-monitor"><div className="chartjs-size-monitor-expand"><div className /></div><div className="chartjs-size-monitor-shrink"><div className /></div></div>
+              <ul className='col-12'>
+                    {/* Đổi thành BarChart, LineChart, PieChart, DoughnutChart tuỳ ý
+                    {/* Thêm thẻ ul để hiển thị nhiều Chart */}
+                    {/* col-..., mt-..., me-..., ... */}
+                <Bar
+                      height = {400}
+                      data = {totalPostByMonth}
+                      options = {options}
+                  />
+            </ul>
 
-       <ul className='col-6'>
-       <Pie
-              height = {400}
-              data = {totalUserByYear}
-              options = {options}
-          />
-       </ul>
+            <div>
+            <select value={selectedYearPublished} onChange={(e) => setSelectedYearPublished(e.target.value)}>
+                      {published_years && published_years.map( 
+                        (item) =>
+                        
+                        <option value={item}> {item}</option>
+                      )
+                      }
+                    
+            </select>
+          </div>
+          
+            </div>
+          </div>
+          {/* /.card-body */}
 
-       <ul className='col-6'>
-       <Doughnut
-              height = {400}
-              data = {totalUserByYear}
-              options = {options}
-          />
-       </ul>
-    </div>
+
+        </div>
+
+        
+      </div>
+
+      </section>
     
+    </div>
   )
 }
 

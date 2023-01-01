@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ntth.socialnetwork.entity.Group;
+import com.ntth.socialnetwork.entity.User;
 import com.ntth.socialnetwork.payload.request.GroupRequest;
 import com.ntth.socialnetwork.repository.GroupJoinDetailsRepository;
 import com.ntth.socialnetwork.repository.GroupRepository;
@@ -73,7 +74,7 @@ public class GroupController {
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-	}
+	}	
 	
 	@PutMapping("/update/{id}")
 	public ResponseEntity<Group> updatePost(@PathVariable("id") long id, @RequestBody GroupRequest groupRequest) {

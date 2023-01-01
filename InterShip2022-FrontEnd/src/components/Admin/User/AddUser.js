@@ -42,7 +42,7 @@ const UserForm = () => {
         registeredDate: enteredRegisteredDate
       })
       .then((response) => {
-        alert("User  "+ enteredUsername +" added!");
+        alert("User "+ enteredUsername +" added!");
         navigate("/user/read");
       }).catch(error => {
         alert("error==="+error);
@@ -61,37 +61,41 @@ const UserForm = () => {
 
   }
     return(
+    // Thêm className = "content-wrapper" vào tránh Navbar che chữ
+    <div className="content-wrapper" >
       <Alert variant='primary'>
-      <Container>
-      <Form onSubmit={submitActionHandler}>
-        {/* <Form.Group controlId="form.UserID">
-            <Form.Label>User ID</Form.Label>
-            <Form.Control type="number" value={enteredUserID} onChange={userIDChangeHandler} placeholder="Enter User ID" required/>
-        </Form.Group> */}
-         <Form.Group  controlId="form.Username">
-            <Form.Label>Username</Form.Label>
-            <Form.Control type="text" value={enteredUsername} onChange={usernameChangeHandler} placeholder="Enter Username" required/>
-        </Form.Group>
-        <Form.Group  controlId="form.Email">
-            <Form.Label>Email</Form.Label>
-            <Form.Control type="email" value={enteredEmail} onChange={emailChangeHandler} placeholder="Enter Email" required/>
-        </Form.Group>
-        <Form.Group  controlId="form.Password">
-            <Form.Label>Password</Form.Label>
-            <Form.Control type="password" value={enteredPassword} onChange={passwordChangeHandler} placeholder="Enter Password" required/>
-        </Form.Group>
-        <Form.Group  controlId="form.RegisteredDate">
-            <Form.Label>Registered Date</Form.Label>
-            <Form.Control type="date" value={enteredRegisteredDate} onChange={registeredDateChangeHandler} placeholder="Enter Registered Date" required/>
-        </Form.Group>
-        <br></br>
-        <Button type='submit'>Add User</Button>
-        &nbsp;&nbsp;&nbsp;
-        <Button type='submit' onClick={()=>cancelHandler()}>Cancel</Button>
-      </Form>
+        <Container>
+          <Form onSubmit={submitActionHandler}>
+            {/* <Form.Group controlId="form.UserID">
+                <Form.Label>User ID</Form.Label>
+                <Form.Control type="number" value={enteredUserID} onChange={userIDChangeHandler} placeholder="Enter User ID" required/>
+            </Form.Group> */}
+            <Form.Group  controlId="form.Username">
+                <Form.Label>Username</Form.Label>
+                <Form.Control type="text" value={enteredUsername} onChange={usernameChangeHandler} placeholder="Enter Username" required/>
+            </Form.Group>
+            <Form.Group  controlId="form.Email">
+                <Form.Label>Email</Form.Label>
+                <Form.Control type="email" value={enteredEmail} onChange={emailChangeHandler} placeholder="Enter Email" required/>
+            </Form.Group>
+            <Form.Group  controlId="form.Password">
+                <Form.Label>Password</Form.Label>
+                <Form.Control type="password" value={enteredPassword} onChange={passwordChangeHandler} placeholder="Enter Password" required/>
+            </Form.Group>
+            <Form.Group  controlId="form.RegisteredDate">
+                <Form.Label>Registered Date</Form.Label>
+                <Form.Control type="date" value={enteredRegisteredDate} onChange={registeredDateChangeHandler} placeholder="Enter Registered Date" required/>
+            </Form.Group>
+            <br></br>
+            <Button type='submit'>Add User</Button>
+            &nbsp;&nbsp;&nbsp;
+            <Button type='submit' onClick={()=>cancelHandler()}>Cancel</Button>
+          </Form>
 
-    </Container>
-    </Alert>
+      </Container>
+     </Alert>
+    </div>
+     
 
     );
 }
