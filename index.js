@@ -28,7 +28,6 @@ io.on("connection", (socket)=>{
         io.emit("getUsers",users);
     })
 
-<<<<<<< HEAD
     socket.on("joinConvRoom", data => {
         socket.join(data);
     });
@@ -38,13 +37,6 @@ io.on("connection", (socket)=>{
     socket.on("sendMessage",({senderID, text, room})=>{
         if (room) {
             socket.to(room).emit("getMessage",{
-=======
-    //send and get message
-    socket.on("sendMessage",({senderID,receiverID,text})=>{
-        const user = getUser(receiverID);
-        if (user) {
-            io.to(user.socketID).emit("getMessage",{
->>>>>>> 4e763ad51d275e747edd8be706805ae70087a3a9
                 senderID,
                 text,
             });
