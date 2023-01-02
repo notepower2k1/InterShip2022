@@ -8,13 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "conversation")
@@ -24,25 +23,31 @@ public class Conversation {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "c_id", nullable = false)
 	private Long id;
-
-
 	
+	@NotBlank
+	@Column(name = "name", nullable = false)
+	private String name;
+
 	@NotNull
 	@Column(name = "status", nullable = false)
 	private int status;
 	
-	@ManyToOne
-    @JoinColumn(name="user_one", nullable=false)
-    private User userOne;
-	
-	@ManyToOne
-    @JoinColumn(name="user_two", nullable=false)
-    private User userTwo;
-
-	
+	@JsonIgnore
 	@OneToMany(mappedBy="conversation", cascade = CascadeType.ALL)
   	private Set<ConversationReply> conversationReply;
 	
+	@JsonIgnore
+  	@OneToMany(mappedBy="conver", cascade = CascadeType.ALL)
+  	private Set<ConverJoinDetails> cjDetailsList;
+	
+	
+
+	public Conversation(@NotBlank String name, @NotNull int status) {
+		super();
+		this.name = name;
+		this.status = status;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -51,42 +56,41 @@ public class Conversation {
 		this.id = id;
 	}
 
-
-
-	public User getUserOne() {
-		return userOne;
+	public String getName() {
+		return name;
 	}
 
-	public void setUserOne(User userOne) {
-		this.userOne = userOne;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public User getUserTwo() {
-		return userTwo;
+	public int getStatus() {
+		return status;
 	}
 
-	public void setUserTwo(User userTwo) {
-		this.userTwo = userTwo;
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
-	public Conversation(Long id, User userOne, User userTwo) {
-		super();
-		this.id = id;
-		this.userOne = userOne;
-		this.userTwo = userTwo;
+	public Set<ConversationReply> getConversationReply() {
+		return conversationReply;
+	}
+
+	public void setConversationReply(Set<ConversationReply> conversationReply) {
+		this.conversationReply = conversationReply;
+	}
+
+	public Set<ConverJoinDetails> getCjDetailsList() {
+		return cjDetailsList;
+	}
+
+	public void setCjDetailsList(Set<ConverJoinDetails> cjDetailsList) {
+		this.cjDetailsList = cjDetailsList;
 	}
 
 	public Conversation() {
 		super();
 	}
-	
-
-
-
-
-
-	
-	
 	
 	
 }

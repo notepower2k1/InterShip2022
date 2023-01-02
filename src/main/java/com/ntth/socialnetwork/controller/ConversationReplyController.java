@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -88,7 +87,12 @@ public class ConversationReplyController {
 		return conversationReplyRepository.getCountNewMessage(conversationID,userID);
 	}
 	
-
+	@GetMapping("/{conversationID}/other-user-id/{userID}")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public List<Long> getOthersUserID(@PathVariable("conversationID") Long conversationID,
+			@PathVariable("userID") Long userID) {
+		return conversationReplyRepository.getOthersUserID(conversationID,userID);
+	}
 	
 	@PutMapping("/updatestatus/{conversationID}/{userID}")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")

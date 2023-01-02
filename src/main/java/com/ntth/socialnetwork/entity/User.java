@@ -65,9 +65,10 @@ public class User {
   	@OneToMany(mappedBy="user", cascade = CascadeType.ALL)
   	private Set<GroupJoinDetails> gpDetailsList;
   	
-	public Set<Post> getPosts() {
-		return posts;
-	}
+  	@JsonIgnore
+  	@OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+  	private Set<ConverJoinDetails> cjDetailsList;
+  	
   	@JsonIgnore
   	@OneToMany(mappedBy="user", cascade = CascadeType.ALL)
   	private Set<ConversationReply> conversationReply;
@@ -75,6 +76,10 @@ public class User {
   	@JsonIgnore
   	@OneToOne(mappedBy="user")
 	private UserProfile profile;
+  	
+	public Set<Post> getPosts() {
+		return posts;
+	}
 
 	public void setPosts(Set<Post> posts) {
 		this.posts = posts;

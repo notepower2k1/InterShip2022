@@ -1,5 +1,7 @@
 package com.ntth.socialnetwork.entity;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,7 +23,7 @@ public class Reply {
 	@Column(name = "reply", nullable = false)
 	private String reply;
 	@Column(name = "date_reply", nullable = false)
-	private String dateReply;
+	private Timestamp dateReply;
 	
 	@ManyToOne
     @JoinColumn(name="user_id", nullable=false)
@@ -48,22 +50,21 @@ public class Reply {
 		this.reply = reply;
 	}
 
-	public String getDateReply() {
+	public Timestamp getDateReply() {
 		return dateReply;
 	}
 
-	public void setDateReply(String dateReply) {
+	public void setDateReply(Timestamp dateReply) {
 		this.dateReply = dateReply;
 	}
 
 	
 
 
-	public Reply(Long id, String reply, String dateReply, User user, PostComment comment) {
+	public Reply(Long id, String reply,  User user, PostComment comment) {
 		super();
 		this.id = id;
 		this.reply = reply;
-		this.dateReply = dateReply;
 		this.user = user;
 		this.comment = comment;
 	}

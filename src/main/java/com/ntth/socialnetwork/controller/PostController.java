@@ -27,10 +27,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ntth.socialnetwork.entity.EditHistory;
+import com.ntth.socialnetwork.entity.LikePost;
 import com.ntth.socialnetwork.entity.Post;
 import com.ntth.socialnetwork.entity.User;
 import com.ntth.socialnetwork.payload.request.PostRequest;
 import com.ntth.socialnetwork.repository.EditHistoryRepository;
+import com.ntth.socialnetwork.repository.LikePostRepository;
 import com.ntth.socialnetwork.repository.PostRepository;
 import com.ntth.socialnetwork.repository.UserRepository;
 
@@ -46,6 +48,9 @@ public class PostController {
 
 	@Autowired
 	EditHistoryRepository editDetailRepo;
+	
+	@Autowired
+	LikePostRepository likeRepository;
 	
 	@GetMapping("/all")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
@@ -63,8 +68,7 @@ public class PostController {
 		}
 	}
 	
-	/*
-	@GetMapping("/{id}")
+	@GetMapping("/detail/{id}")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
 	public ResponseEntity<?> getPostById(@PathVariable("id") Long id) {
 		Optional<Post> post = postRepository.findById(id);
@@ -75,7 +79,6 @@ public class PostController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
-	*/
 	
 	@GetMapping("/{user_id}")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
@@ -84,6 +87,7 @@ public class PostController {
         
         return new ResponseEntity<List<Post>>(listPost, HttpStatus.OK);
 	}
+	
 	@PostMapping("/add")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
 	public ResponseEntity<HttpStatus> createPost(@Valid @RequestBody PostRequest postRequest) {
@@ -104,7 +108,7 @@ public class PostController {
 			
 			Post newPost = postRepository
 					.save(new Post(content, image, 
-							currentDate, currentUser, postsChange));
+							currentDate, currentUser, postsChange, null));
 			posts.add(newPost);
 			editDetail.setPosts(posts);
 			
@@ -115,8 +119,42 @@ public class PostController {
 		}
 	}
 	
+	@PostMapping("/add-post-group/{group_id}")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public ResponseEntity<?> createGroupPost(
+			@Valid @RequestBody PostRequest postRequest,
+			@PathVariable("group_id") Long group_id
+		) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String username = authentication.getName();
+		User currentUser = userRepository.findByUsername(username)
+				.orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+		Timestamp currentDate = new Timestamp(System.currentTimeMillis());
+		String content = postRequest.getContent();
+		String image = postRequest.getImage();
+		
+		try {	
+			Set<Post> posts = new HashSet<Post>();
+			Set<EditHistory> postsChange = new HashSet<EditHistory>();
+			
+			EditHistory editDetail = editDetailRepo.save(
+					new EditHistory(currentDate, content, image, posts));
+			postsChange.add(editDetail);
+			
+			Post newPost = postRepository.save(
+					new Post(content, image, 
+							currentDate, currentUser, postsChange, group_id));
+			return new ResponseEntity<>(newPost, HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 	@PutMapping("/update/{id}")
-	public ResponseEntity<HttpStatus> updatePost(@PathVariable("id") long id, @RequestBody PostRequest postRequest) {
+	public ResponseEntity<HttpStatus> updatePost(
+			@PathVariable("id") long id, 
+			@RequestBody PostRequest postRequest
+		) {
 		Optional<Post> postData = postRepository.findById(id);
 		Timestamp currentDate = new Timestamp(System.currentTimeMillis());
 		String content = postRequest.getContent();
@@ -168,5 +206,83 @@ public class PostController {
 		}
 	}
 	
+	@GetMapping("/get-post-group/{group_id}")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public ResponseEntity<List<Post>> getAllPostsGroup(@PathVariable("group_id") Long group_id) {
+		try {
+			List<Post> posts = this.postRepository.getPostsGroup(group_id);
 	
+			if (posts.isEmpty()) {
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			}
+			return new ResponseEntity<>(posts, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@GetMapping("/get-by-friend/{user_id}")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public ResponseEntity<List<Post>>getFriendPostByUserID(@PathVariable("user_id") Long user_id) {
+		List<Post> listPost = this.postRepository.getFriendPostByUserID(user_id);
+        
+            return new ResponseEntity<List<Post>>(listPost, HttpStatus.OK);
+		
+	}
+	
+	
+	@GetMapping("/post-liked/{id}")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public ResponseEntity<List<LikePost>> getPostUserLiked(@PathVariable("id") Long id) {
+		try {
+			List<LikePost> posts = likeRepository.getPostsUserLiked(id);
+			return new ResponseEntity<>(posts, HttpStatus.ACCEPTED);
+		} catch (Exception e) {	
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@GetMapping("/year-register")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public ResponseEntity<List<Long>> getYearPublishedByPost() {
+		try {
+			List<Long> years = postRepository.getYearByPost();
+			return new ResponseEntity<List<Long>>(years, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@GetMapping("/count-by-year")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public ResponseEntity<List<Long>> countPostByYearPublished() {
+		try {
+			List<Long> countPosts = postRepository.countPostByYear();
+			return new ResponseEntity<List<Long>>(countPosts, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@GetMapping("/month-register/{year}")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public ResponseEntity<List<String>> getMonthPublishedByPost(@PathVariable("year") Long year) {
+		try {
+			List<String> months = postRepository.getMonthByPost(year);
+			return new ResponseEntity<List<String>>(months, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@GetMapping("/count-by-month/{year}")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public ResponseEntity<List<Long>> countPostByMonthPublished(@PathVariable("year") Long year) {
+		try {
+			List<Long> countPosts = postRepository.countPostByMonth(year);
+			return new ResponseEntity<List<Long>>(countPosts, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }

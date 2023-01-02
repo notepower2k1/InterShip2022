@@ -1,6 +1,6 @@
 package com.ntth.socialnetwork.entity;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,8 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "post_comment")
@@ -29,7 +27,7 @@ public class PostComment {
 	private String content;
 	
 	@Column(name = "date_comment", nullable = false)
-	private Date commentDate;
+	private Timestamp commentDate;
 	
 	@ManyToOne
     @JoinColumn(name="user_id", nullable=false)
@@ -43,11 +41,10 @@ public class PostComment {
 		super();
 	}
 
-	public PostComment(Long id, @NotBlank @Size(max = 100) String content, Date commentDate, User user, Post post) {
+	public PostComment(Long id, @NotBlank @Size(max = 100) String content, User user, Post post) {
 		super();
 		this.id = id;
 		this.content = content;
-		this.commentDate = commentDate;
 		this.user = user;
 		this.post = post;
 	}
@@ -68,11 +65,11 @@ public class PostComment {
 		this.content = content;
 	}
 
-	public Date getCommentDate() {
+	public Timestamp getCommentDate() {
 		return commentDate;
 	}
 
-	public void setCommentDate(Date commentDate) {
+	public void setCommentDate(Timestamp commentDate) {
 		this.commentDate = commentDate;
 	}
 

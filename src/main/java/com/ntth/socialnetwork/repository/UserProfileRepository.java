@@ -47,13 +47,32 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
 			+ "WHERE f.user_id_1 = :userID ",nativeQuery = true)
 	List<UserProfile> getListFriendShip(@Param("userID") long userId);
 	
-	
-	
-	@Query(value = "SELECT up.userprofile_id, avatar, dob, "
-			+ "first_name, last_name, gender, up.user_id, about, location_id, background, update_date "
-			+ "FROM (joinedgroup j JOIN user u ON u.user_id = j.user_id) "
-			+ "JOIN userprofile up ON up.user_id = u.user_id WHERE group_id = :#{#group_id}",nativeQuery = true)
-	List<UserProfile> getProfileOfGroupMembers(@Param("group_id") long group_id);
+	@Query(value = "SELECT * from userprofile WHERE userprofile.user_id is not null and userprofile.user_id in"
+			+ "(SELECT DISTINCT"
+			+ "CASE"
+			+ "when friendship.user_id_1 =:#{#user_id} then friendship.user_id_2"
+			+ "WHEN friendship.user_id_2 =:#{#user_id} THEN friendship.user_id_1"
+			+ "else null"
+			+ "END"
+			+ "from friendship)",nativeQuery = true)
+	List<UserProfile> getFriendProfile(@Param("user_id") long userId);
 	
 	Optional<UserProfile> findByUser(User user);
+	
+	@Query(value = "SELECT * FROM userprofile WHERE user_id = :#{#user_id}",nativeQuery = true)
+	UserProfile findByUserID(@Param("user_id") long userId);
+	
+	@Query(value = "SELECT userprofile_id, avatar, background, dob, first_name, last_name, "
+			+ "gender, update_date, about, location_id, up.user_id "
+			+ "FROM (joined_conver jc JOIN user u ON u.user_id = jc.user_id) "
+			+ "JOIN userprofile up ON up.user_id = u.user_id WHERE conv_id = :#{#conv_id} AND jc.user_id <> :#{#user_id}", nativeQuery = true)
+	List<UserProfile> getProfileOfOtherConvMembers(@Param("conv_id") long conv_id, @Param("user_id") long user_id);
+
+	@Query(value = "SELECT userprofile_id, avatar, background, dob, first_name, last_name, "
+			+ "gender, update_date, about, location_id, up.user_id "
+			+ "FROM (joined_conver jc JOIN user u ON u.user_id = jc.user_id) "
+			+ "JOIN userprofile up ON up.user_id = u.user_id WHERE conv_id = :#{#conv_id}", nativeQuery = true)
+	List<UserProfile> getProfileOfGroupMembers(@Param("conv_id") long conv_id);
+
+
 }

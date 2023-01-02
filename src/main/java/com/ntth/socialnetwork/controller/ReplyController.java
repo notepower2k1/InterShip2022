@@ -2,9 +2,7 @@ package com.ntth.socialnetwork.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,6 +33,7 @@ public class ReplyController {
 		super();
 		this.replyRepo = replyRepo;
 	}
+	
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
 	@GetMapping("/{comment_id}")
 	ResponseEntity<List<Reply>>getAllCommentOnPost(@PathVariable("comment_id") Long commend_id) {
@@ -53,6 +52,7 @@ public class ReplyController {
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
 	@PostMapping("/add")
 	ResponseEntity<Reply> createReply(@RequestBody Reply reply) throws URISyntaxException {
+		reply.setDateReply(new java.sql.Timestamp(System.currentTimeMillis()));
 		Reply result = replyRepo.save(reply);
 		return ResponseEntity.created(new URI("/api/reply" + result.getId())).body(result); 
 	}
@@ -61,7 +61,8 @@ public class ReplyController {
 	ResponseEntity<Reply> updateReply(@PathVariable("id") Long id,@RequestBody Reply reply){
 		Reply replyupdate = replyRepo.findById(id).orElseThrow();
 		
-		replyupdate.setDateReply(reply.getDateReply());
+		
+		replyupdate.setDateReply(new java.sql.Timestamp(System.currentTimeMillis()));
 		replyupdate.setReply(reply.getReply());
 		replyupdate.setUser(reply.getUser());
 		replyupdate.setComment(reply.getComment());

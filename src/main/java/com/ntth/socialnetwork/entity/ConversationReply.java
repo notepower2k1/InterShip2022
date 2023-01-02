@@ -44,7 +44,6 @@ public class ConversationReply {
     @JoinColumn(name="user_id_fk", nullable=false)
     private User user;
 	
-	
 	@ManyToOne
     @JoinColumn(name="c_id_fk", nullable=false)
     private Conversation conversation;

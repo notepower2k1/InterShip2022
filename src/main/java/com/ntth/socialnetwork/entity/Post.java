@@ -56,6 +56,9 @@ public class Post {
 	  joinColumns = @JoinColumn(name = "post_id"), 
 	  inverseJoinColumns = @JoinColumn(name = "history_id"))
 	private Set<EditHistory> postsChange;
+	
+	@Column(name = "group_id")
+	private Long group_id;
 
 	public Post() {
 		super();
@@ -78,6 +81,16 @@ public class Post {
 	}
 
 	public Post(@NotBlank @Size(max = 150) String content, @NotBlank String image, Timestamp publishedDate, User user,
+			Set<EditHistory> postsChange, Long group_id) {
+		super();
+		this.content = content;
+		this.image = image;
+		this.publishedDate = publishedDate;
+		this.user = user;
+		this.group_id = group_id;
+	}
+
+	public Post(@NotBlank @Size(max = 150) String content, @NotBlank String image, Timestamp publishedDate, User user,
 			Set<EditHistory> postsChange) {
 		super();
 		this.content = content;
@@ -85,6 +98,7 @@ public class Post {
 		this.publishedDate = publishedDate;
 		this.user = user;
 		this.postsChange = postsChange;
+		
 	}
 
 	public Long getId() {
@@ -125,6 +139,14 @@ public class Post {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public Long getGroup_id() {
+		return group_id;
+	}
+
+	public void setGroup_id(Long group_id) {
+		this.group_id = group_id;
 	}
 	
 	

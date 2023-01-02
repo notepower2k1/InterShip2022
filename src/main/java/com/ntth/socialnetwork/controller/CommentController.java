@@ -1,10 +1,7 @@
 package com.ntth.socialnetwork.controller;
 
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -58,6 +55,9 @@ public class CommentController {
 	@PostMapping("/add")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
 	ResponseEntity<PostComment> createComment(@RequestBody PostComment comment) throws URISyntaxException {
+		
+		comment.setCommentDate(new java.sql.Timestamp(System.currentTimeMillis()));
+		
 		PostComment result = commentRepo.save(comment);
 		return new ResponseEntity<>(result, HttpStatus.CREATED);
 	}
@@ -67,8 +67,9 @@ public class CommentController {
 	ResponseEntity<PostComment> updateComment(@PathVariable("id") Long id,@RequestBody PostComment comment){
 		PostComment updatecomment = commentRepo.findById(id).orElseThrow();
 		
+		
 		updatecomment.setContent(comment.getContent());
-		updatecomment.setCommentDate(comment.getCommentDate());
+		updatecomment.setCommentDate(new java.sql.Timestamp(System.currentTimeMillis()));
 		updatecomment.setPost(comment.getPost());
 		updatecomment.setUser(comment.getUser());
 

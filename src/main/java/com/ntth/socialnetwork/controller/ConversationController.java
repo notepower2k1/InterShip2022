@@ -1,16 +1,16 @@
 package com.ntth.socialnetwork.controller;
 
 import java.net.URISyntaxException;
-import java.sql.Timestamp;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
-import javax.validation.Valid;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,10 +19,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ntth.socialnetwork.entity.ConverJoinDetails;
 import com.ntth.socialnetwork.entity.Conversation;
-import com.ntth.socialnetwork.entity.ConversationReply;
 import com.ntth.socialnetwork.entity.User;
+import com.ntth.socialnetwork.entity.UserProfile;
+import com.ntth.socialnetwork.payload.request.CreateRoomConvRequest;
+import com.ntth.socialnetwork.repository.ConvJoinDetailsRepository;
 import com.ntth.socialnetwork.repository.ConversationRepository;
+import com.ntth.socialnetwork.repository.UserProfileRepository;
 import com.ntth.socialnetwork.repository.UserRepository;
 
 
@@ -35,7 +39,13 @@ public class ConversationController {
 	private ConversationRepository conversationRepository;
 	
 	@Autowired
-	UserRepository userRepository;
+	private UserProfileRepository userProfileRepo;
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	private ConvJoinDetailsRepository convJoinRepo;
 	
 	@GetMapping("/{userID}")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
@@ -48,8 +58,17 @@ public class ConversationController {
 		}
 	}
 	
+	@GetMapping("/mem-qtt/{conv_id}")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public ResponseEntity<?> getMemberQttInConv(@PathVariable("conv_id") Long conv_id) {
+		try {
+			Long membersQtt = conversationRepository.getMemberQttInConv(conv_id);
+			return new ResponseEntity<>(membersQtt, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 	
-
 	@PostMapping("/add")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
 	ResponseEntity<Conversation> createConversation(@RequestBody Conversation conversation) throws URISyntaxException {
@@ -57,6 +76,67 @@ public class ConversationController {
 		return new ResponseEntity<>(result, HttpStatus.CREATED);
 	}
 	
+	@GetMapping("/{conv_id}/other-mems-profile/{user_id}")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public ResponseEntity<?> getProfileOfOtherConvMembers(
+			@PathVariable("conv_id") Long conv_id,
+			@PathVariable("user_id") Long user_id) {
+		try {
+			List<UserProfile> profiles = userProfileRepo.getProfileOfOtherConvMembers(conv_id, user_id);
+			return new ResponseEntity<>(profiles, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 	
-
+	@GetMapping("/{conv_id}/other-mems/{user_id}")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public ResponseEntity<?> getOtherConvMembers(
+			@PathVariable("conv_id") Long conv_id,
+			@PathVariable("user_id") Long user_id) {
+		try {
+			List<User> users = userRepository.getOtherConvMembers(conv_id, user_id);
+			return new ResponseEntity<>(users, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	@PostMapping("/add-room")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public ResponseEntity<?> createRoomConv(
+			@RequestBody CreateRoomConvRequest request) {
+		try {
+			String convName = new String();
+			
+			List<Long> membersID = request.getMembersID();
+			List<User> members = new ArrayList<>();
+			Set<ConverJoinDetails> cjList = new HashSet<>();
+			
+			for (int i = 0; i < membersID.size(); i++) {
+				Long id = membersID.get(i);
+				User user = userRepository.findById(id).get();
+				UserProfile profile = userProfileRepo.findByUserID(id);
+				convName += profile.getFirstName().concat(" " + profile.getLastName()) + " ";
+				members.add(user);
+			}
+			
+			Conversation newConver = conversationRepository.save(
+					new Conversation(convName, 1)
+			);
+			
+			members.forEach(member -> {
+				ConverJoinDetails newConverJoin = 
+						new ConverJoinDetails(newConver, member, new Date(System.currentTimeMillis()));
+				cjList.add(newConverJoin);
+				convJoinRepo.save(newConverJoin);
+			});
+			newConver.setCjDetailsList(cjList);
+			conversationRepository.save(newConver);
+			
+			return new ResponseEntity<>(newConver, HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 }
