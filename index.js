@@ -25,22 +25,32 @@ io.on("connection", (socket)=>{
     //take userID and socketID from user
     socket.on("addUser",userId=>{
         addUser(userId,socket.id);
-
         io.emit("getUsers",users);
     })
+
+    socket.on("joinConvRoom", data => {
+        socket.join(data);
+    });
+
     //send and get message
 
-
-    socket.on("sendMessage",({senderID,receiverID,text})=>{
-        const user = getUser(receiverID);
-        if (user) {
-            io.to(user.socketID).emit("getMessage",{
+    socket.on("sendMessage",({senderID, text, room})=>{
+        if (room) {
+            socket.to(room).emit("getMessage",{
                 senderID,
                 text,
             });
-        }
-      
+        };
     });
+
+    //send and get notification
+    socket.on("sendNotification",(noty) => {
+        const user = getUser(noty.recipient.id);
+        console.log(user)
+        if (user) {
+            io.to(user.socketID).emit("getNotification",noty)
+        }
+    })
 
     //when disconnect
     socket.on("disconnect",()=>{
