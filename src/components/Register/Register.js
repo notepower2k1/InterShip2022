@@ -81,23 +81,24 @@ const Register = ({setIsRegistered}) => {
         form.current.validateAll();
 
         if (checkBtn.current.context._errors.length === 0) {
-        AuthService.register(username, email, password).then(
-            (response) => {
-                setMessage(response.data.message);
-                setSuccessful(true);
-            },
-            (error) => {
-                const resMessage =
-                    (error.response &&
-                    error.response.data &&
-                    error.response.data.message) ||
-                    error.message ||
-                    error.toString();
+            AuthService.register(username, email, password).then(
+                (response) => {
+                    setMessage(response.data.message);
+                    setSuccessful(true);
+                },
+                (error) => {
+                    const resMessage =
+                        (error.response &&
+                        error.response.data &&
+                        error.response.data.message) ||
+                        error.message ||
+                        error.toString();
 
-                setMessage(resMessage);
-                setSuccessful(false);
-            }
-        );}
+                    setMessage(resMessage);
+                    setSuccessful(false);
+                }
+            );
+        }
     };
 
     return (
@@ -140,15 +141,13 @@ const Register = ({setIsRegistered}) => {
                 </div>
                 <Link onClick={()=> setIsRegistered(prev =>!prev) }>Already have an account</Link>
                 <div className="submit-btns">
-                    <button className="mtr-btn signup" type="button"><span>Register</span></button>
+                    <button className="mtr-btn signup" type="submit"><span>Register</span></button>
                 </div>
                 {
                     message && (
                             <div className="form-group">
                                 <div
-                                    className={
-                                    successful ? "alert alert-success" : "alert alert-danger"
-                                    }
+                                    className={ successful ? "alert alert-success" : "alert alert-danger" }
                                     role="alert"
                                 >
                                     {message}

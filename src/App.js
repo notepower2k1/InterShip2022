@@ -34,6 +34,7 @@ import Chart from "./components/Admin/Statistics/Chart";
 import CountRow from './components/Admin/Statistics/CountRow';
 
 import { setSocket } from "./redux/actions/SocketActions";
+import ConfirmAccount from "./components/ConfirmAccount/ConfirmAccount";
 
 const socket = io.connect("ws://localhost:8900");
 
@@ -68,82 +69,84 @@ function App() {
     setCurrentUser(undefined);
   };
   
-  return (
-    <div className="theme-layout">
-		{ currentUser &&  <Navbar user={user} currentUser={currentUser} logOut={logOut}/>}
-      <div className="mt-5">
-        <Routes>
-			<Route path="/login" element={<Login/>} />
-			<Route path="/register" element={<Register/>} />
-			<Route path="/posts" element={
-			<PrivateRoute>
-				<PostList />
-			</PrivateRoute>
-			} />
+	return (
+		<div className="theme-layout" style={{ height: "100vh" }}>
+			{ currentUser &&  <Navbar user={user} currentUser={currentUser} logOut={logOut}/>}
+			<div className="mt-5 h-100 w-100">
+				<Routes>
+					<Route path="/login" element={<Login/>} />
+					<Route path="/register" element={<Register/>} />
+					<Route path="/confirm-account/:token" element={<ConfirmAccount />} />
+					
+					<Route path="/posts" element={
+					<PrivateRoute>
+						<PostList />
+					</PrivateRoute>
+					} />
 
-			<Route path="/detail/post/:postID" element={
-				<PrivateRoute>
-				<PostDetail />
-				</PrivateRoute>
-			} />
-			<Route path="/groups" element={
-				<PrivateRoute>
-				<GroupList />
-				</PrivateRoute>
-			} />
-			<Route path="/group/create" element={
-				<PrivateRoute>
-				<GroupCreate />
-				</PrivateRoute>
-			} />
-			<Route path="/group/:id" element={
-				<PrivateRoute>
-				<GroupPage />
-				</PrivateRoute>
-			} />
+					<Route path="/detail/post/:postID" element={
+						<PrivateRoute>
+						<PostDetail />
+						</PrivateRoute>
+					} />
+					<Route path="/groups" element={
+						<PrivateRoute>
+						<GroupList />
+						</PrivateRoute>
+					} />
+					<Route path="/group/create" element={
+						<PrivateRoute>
+						<GroupCreate />
+						</PrivateRoute>
+					} />
+					<Route path="/group/:id" element={
+						<PrivateRoute>
+						<GroupPage />
+						</PrivateRoute>
+					} />
 
-			<Route path="/group/:id/edit" element={
-				<PrivateRoute>
-					<GroupEdit />
-				</PrivateRoute>
-			} />
+					<Route path="/group/:id/edit" element={
+						<PrivateRoute>
+							<GroupEdit />
+						</PrivateRoute>
+					} />
 
-			<Route path="/profile/:userID" element={
-				<PrivateRoute>
-				<ProfileComponent />
-				</PrivateRoute>
-			} />
-			<Route path="/conversation" element={
-				<PrivateRoute>
-				<ListConversation />
-				</PrivateRoute>
-			} />
-			<Route path="/search/:keyword" element={
-				<PrivateRoute>
-				<Search />
-				</PrivateRoute>
-			} />
+					<Route path="/profile/:userID" element={
+						<PrivateRoute>
+						<ProfileComponent />
+						</PrivateRoute>
+					} />
+					<Route path="/conversation" element={
+						<PrivateRoute>
+						<ListConversation />
+						</PrivateRoute>
+					} />
+					<Route path="/search/:keyword" element={
+						<PrivateRoute>
+						<Search />
+						</PrivateRoute>
+					} />
 
-			<Route path="/list-requester/:userID" element={
-				<PrivateRoute>
-				<RequesterList />
-				</PrivateRoute>
-			}/>
-			<Route exact path="/admin/user-role/read" element={<UserRoleDataTable/>}/>
-			<Route exact path="/admin/user-role/create" element={<AddUserRole/>}/>W
-			<Route path="/admin/user-role/edit/:userID/:roleID" element={<EditUserRole/>}/>
+					<Route path="/list-requester/:userID" element={
+						<PrivateRoute>
+						<RequesterList />
+						</PrivateRoute>
+					}/>
+					<Route exact path="/admin/user-role/read" element={<UserRoleDataTable/>}/>
+					<Route exact path="/admin/user-role/create" element={<AddUserRole/>}/>W
+					<Route path="/admin/user-role/edit/:userID/:roleID" element={<EditUserRole/>}/>
 
-			<Route exact path="/admin/group/read" element={<GroupDataTable/>}/>
-			<Route exact path="/admin/group/create" element={<AddGroup/>}/>
-			<Route path="/admin/group/edit/:id" element={<EditGroup/>}/>
+					<Route exact path="/admin/group/read" element={<GroupDataTable/>}/>
+					<Route exact path="/admin/group/create" element={<AddGroup/>}/>
+					<Route path="/admin/group/edit/:id" element={<EditGroup/>}/>
 
-		
-			<Route exact path="admin/chart" element={<Chart/>}/>
-			<Route exact path="admin/countRow" element={<CountRow/>}/>    
-        </Routes>
-        <AuthVerify logOut={logOut}/>
-      </div>
-    </div>
-  );
+				
+					<Route exact path="admin/chart" element={<Chart/>}/>
+					<Route exact path="admin/countRow" element={<CountRow/>}/>    
+				</Routes>
+				<AuthVerify logOut={logOut}/>
+			</div>
+		</div>
+	);
 }
 export default App;

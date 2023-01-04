@@ -81,7 +81,7 @@ function ProfileComponent() {
     },[userID])
 
    const checkCurrentUserProfile = () => {
-    if (currentUser.id == userID){
+    if (currentUser.id === userID){
       setIsCurrentProfile(true)
     } else{
       setIsCurrentProfile(false)
@@ -101,6 +101,7 @@ function ProfileComponent() {
         // Handle any errors
       });
       OldImage.current = avatar;
+
 
       const backgroundRef = ref(storage,`backGroundImages/${background}`);
       getDownloadURL(backgroundRef).then((url) => {

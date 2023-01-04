@@ -21,7 +21,7 @@ const checkUserIsAdminGroup = async (groupId, userId) => {
 }
 
 const getByUserID = (userId) =>{
-  return rootInstance.get("/user" + userId);
+  return rootInstance.get("/user/" + userId);
 }
 
 

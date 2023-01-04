@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
@@ -133,7 +133,7 @@ const Login = () => {
 									</div>
 								</Form>
 							</div>
-						:	<div class="log-reg-area">
+						:	<div className="log-reg-area">
 								<Register setIsRegistered={setIsRegistered}/>
 							</div>
 					}

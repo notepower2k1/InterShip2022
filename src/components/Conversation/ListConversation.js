@@ -86,7 +86,7 @@ function ListConversation() {
     const handleClick = (index, conversation)=>{
 		
 		setConvRoom(conversation.name)
-		joinConvRoom(conversation.name);
+		joinConvRoom("Room " + conversation.id);
 		getOtherMembers(conversation.id, user.id);
 
         var elements = chatItemRef.current;

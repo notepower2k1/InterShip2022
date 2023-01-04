@@ -60,6 +60,29 @@ const createConversationRoom = async (membersID) => {
     return await rootInstance.post("/conversation/add-room", membersID);
 }
 
+
+//Thêm
+const readOthersFriendNotJoined = async (convID, userID) => {
+    return await rootInstance.get(`/conversation/${convID}/friends-not-joined/${userID}`);
+}
+
+const updateConversationRoom = async (conver, convID) => {
+    return await rootInstance.put("/conversation/update-room/" + convID, conver);
+}
+
+const removeConversationRoom = async (convID) => {
+    return await rootInstance.delete("/conversation/remove-room/" + convID);
+}
+
+const addUserToConverRoom = async (convID, usersID) => {
+    return await rootInstance.post(`/conversation/add-to/${convID}`, usersID);
+}
+
+const removeUserFromConverRoom = async (convID, userID) => {
+    return await rootInstance.delete(`/conversation/${userID}/remove-from/${convID}`);
+}
+//
+
 const ConversationService = {
     getAllConversation,
     getConversationBetweenUser,
@@ -74,6 +97,14 @@ const ConversationService = {
     readMemberProfiles,
     readOtherMembers,
     createConversationRoom,
-    createConversation
+    createConversation,
+
+    //Thêm
+    readOthersFriendNotJoined,
+    updateConversationRoom,
+    removeConversationRoom,
+    addUserToConverRoom,
+    removeUserFromConverRoom
+    //
 };
 export default ConversationService;
