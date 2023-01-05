@@ -1,7 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useEffect, useRef} from 'react'
-import {Link} from "react-router-dom";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect, useRef, useContext } from 'react'
 
 import AuthService from '../../services/auth.service';
 import Conversation from './Conversation';
@@ -10,10 +8,11 @@ import SendMessage from './SendMessage';
 import { getImageUrlFromFirebase } from '../../utils/firebasePort';
 import ConversationService from '../../services/conver.service';
 import ConversationDetail from './ConversationDetail';
+import { SocketContext } from '../../utils/SocketContext';
 import "./Conversation.css";
 
 function ListConversation() {
-	const { socket } = useSelector(state => state.socket);
+	const socket = useContext(SocketContext);
     const user = AuthService.getCurrentUser();
 
     const chatItemRef = useRef([]);
@@ -36,18 +35,12 @@ function ListConversation() {
     const increaseRenderValue = ()=> {
       	setRenderValue(c => c + 1)
     }
-
+	
     useEffect(() => {
       	getAllConversation();
-
-		socket.emit("addUser", user.id);
 		socket.on("getUsers", users => {
 			setOnlineUsers(users);
 		})
-
-		return () => {
-			socket.close();
-		}
 
   	}, [chatOn])
 
@@ -85,7 +78,7 @@ function ListConversation() {
 
     const handleClick = (index, conversation)=>{
 		
-		setConvRoom(conversation.name)
+		setConvRoom("Room " + conversation.id)
 		joinConvRoom("Room " + conversation.id);
 		getOtherMembers(conversation.id, user.id);
 

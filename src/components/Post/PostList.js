@@ -30,15 +30,16 @@ const PostContainer = () => {
     const state = useSelector(state => state.allPosts);
 
 	useEffect(() => {
-        console.log(state);
         getAllPosts();
         return () => {
             setPosts([]);
         }
     }, [reload, state]);
-
+    
     useEffect(() => {
         getAllPosts();
+        getPostsCurrentUserLiked(currentUser.id);
+
         return () => {
             setPosts([]);
         }

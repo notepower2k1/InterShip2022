@@ -1,9 +1,13 @@
-import React ,{useState ,useEffect,useRef} from 'react'
+import React ,{useState ,useEffect} from 'react'
 
 import AuthService from "../../services/auth.service";
 import FriendService from "../../services/friend.service"
+import { useSelector } from 'react-redux';
+import NotificationService from '../../services/notify.service';
 
 function ButtonFriend(props){
+
+    const { socket } = useSelector(state => state.socket);
 
     // -------------
     const [isFriend,setIsFriend] = useState()
@@ -31,6 +35,12 @@ function ButtonFriend(props){
     },[props.userID,change])
 
     const handleAddRequest = () => {
+
+      NotificationService.createNotification(currentUser.id,props.userID,`profile/${currentUser.id}`,1).then(noty => {
+        //socket.emit("sendNotification",noty.data)
+
+        console.log(noty.data)
+      })
       FriendService.addRequest(currentUser.id,props.userID).then(res => setChange(!change))
     }
 
@@ -40,7 +50,6 @@ function ButtonFriend(props){
           setChange(!change)
         }
       )
-      props.handle()
     }
 
     const handleAcceptRequest = () => {

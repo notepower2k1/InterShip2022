@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link ,Outlet } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useDispatch } from "react-redux";
 import {io} from "socket.io-client";
@@ -20,7 +20,6 @@ import Search from "./components/Search/Search";
 import GroupEdit from "./components/Group/GroupEdit";
 import ListConversation from "./components/Conversation/ListConversation";
 
-import RequesterList from "./components/Friend/RequesterList";
 import Navbar from "./Navbar";
 import PostDetail from "./components/Post/PostDetail";
 import AddUserRole from './components/Admin/UserRole/AddUserRole';
@@ -33,120 +32,156 @@ import GroupDataTable from './components/Admin/Group/GroupDataTable';
 import Chart from "./components/Admin/Statistics/Chart";
 import CountRow from './components/Admin/Statistics/CountRow';
 
+import NotificationList from "./components/Notification/NotificationList";
+import RequesterList from "./components/Friend/ListRequester";
+
+import AdminNavbar from "./AdminNavbar";
+
 import { setSocket } from "./redux/actions/SocketActions";
 import ConfirmAccount from "./components/ConfirmAccount/ConfirmAccount";
 
-const socket = io.connect("ws://localhost:8900");
+import { SocketProvider, socket } from './utils/SocketContext';
 
 function App() {
   
-  const [currentUser, setCurrentUser] = useState(undefined);
-  const [searchInput, setSearchInput] = useState();
+	const [currentUser, setCurrentUser] = useState(undefined);
 
-  const user = AuthService.getCurrentUser();
+	const user = AuthService.getCurrentUser();
 
-  const dispatch = useDispatch();
-  dispatch(setSocket(socket));
-  
-  useEffect(() => {
-    
-    if (user) {
-      setCurrentUser(user);
-    }
+	const dispatch = useDispatch();
+	dispatch(setSocket(socket));
+	
+	useEffect(() => {
+		
+		if (user) {
+			setCurrentUser(user);
+		}
 
-    Event.on("logout", () => {
-      logOut();
-    });
+		Event.on("logout", () => {
+			logOut();
+		});
 
-    return () => {
-      Event.remove("logout");
-      socket.close();
-    };
-  }, []);
+		return () => {
+			Event.remove("logout");
+			socket.close();
+		};
+	}, []);
 
-  const logOut = () => {
-    AuthService.logout();
-    setCurrentUser(undefined);
-  };
+	const logOut = () => {
+		AuthService.logout();
+		setCurrentUser(undefined);
+	};
+
+	const AppLayout = () => (
+		<>
+			<main className={"main--container"}>
+				<div className={"main--content"}>
+					<div className="theme-layout">
+						{ currentUser &&  <Navbar user={user} currentUser={currentUser} logOut={logOut}/>}
+						<Outlet />
+					</div>
+				</div>
+			</main>
+		</>
+	);
+	
+	  const AdminLayout = () => (
+		<>
+			<main className={"admin--container"}>
+				<div className={"admin--content"}>
+					<div className="wrapper">
+						<AdminNavbar />
+						<Outlet />
+					</div>
+				</div>
+			</main>
+		</>
+	  );
   
 	return (
-		<div className="theme-layout" style={{ height: "100vh" }}>
-			{ currentUser &&  <Navbar user={user} currentUser={currentUser} logOut={logOut}/>}
-			<div className="mt-5 h-100 w-100">
+		<SocketProvider>
+			<div>
 				<Routes>
-					<Route path="/login" element={<Login/>} />
-					<Route path="/register" element={<Register/>} />
-					<Route path="/confirm-account/:token" element={<ConfirmAccount />} />
-					
-					<Route path="/posts" element={
-					<PrivateRoute>
-						<PostList />
-					</PrivateRoute>
-					} />
+					<Route element={<AppLayout />} >
+						<Route path="/login" element={<Login/>} />
+						{
+							['/', '/posts'].map((path, index) => <Route key={index} path={path} element={
+								<PrivateRoute>
+									<PostList />
+								</PrivateRoute>} />
+							)
+						}
 
-					<Route path="/detail/post/:postID" element={
-						<PrivateRoute>
-						<PostDetail />
-						</PrivateRoute>
-					} />
-					<Route path="/groups" element={
-						<PrivateRoute>
-						<GroupList />
-						</PrivateRoute>
-					} />
-					<Route path="/group/create" element={
-						<PrivateRoute>
-						<GroupCreate />
-						</PrivateRoute>
-					} />
-					<Route path="/group/:id" element={
-						<PrivateRoute>
-						<GroupPage />
-						</PrivateRoute>
-					} />
+						<Route path="/detail/post/:postID" element={
+							<PrivateRoute>
+							<PostDetail />
+							</PrivateRoute>
+						} />
+						<Route path="/groups" element={
+							<PrivateRoute>
+							<GroupList />
+							</PrivateRoute>
+						} />
+						<Route path="/group/create" element={
+							<PrivateRoute>
+							<GroupCreate />
+							</PrivateRoute>
+						} />
+						<Route path="/group/:id" element={
+							<PrivateRoute>
+							<GroupPage />
+							</PrivateRoute>
+						} />
 
-					<Route path="/group/:id/edit" element={
-						<PrivateRoute>
-							<GroupEdit />
-						</PrivateRoute>
-					} />
+						<Route path="/group/:id/edit" element={
+							<PrivateRoute>
+								<GroupEdit />
+							</PrivateRoute>
+						} />
 
-					<Route path="/profile/:userID" element={
-						<PrivateRoute>
-						<ProfileComponent />
-						</PrivateRoute>
-					} />
-					<Route path="/conversation" element={
-						<PrivateRoute>
-						<ListConversation />
-						</PrivateRoute>
-					} />
-					<Route path="/search/:keyword" element={
-						<PrivateRoute>
-						<Search />
-						</PrivateRoute>
-					} />
+						<Route path="/profile/:userID" element={
+							<PrivateRoute>
+							<ProfileComponent />
+							</PrivateRoute>
+						} />
+						<Route path="/conversation" element={
+							<PrivateRoute>
+							<ListConversation />
+							</PrivateRoute>
+						} />
+						<Route path="/search/:keyword" element={
+							<PrivateRoute>
+							<Search />
+							</PrivateRoute>
+						} />
 
-					<Route path="/list-requester/:userID" element={
-						<PrivateRoute>
-						<RequesterList />
-						</PrivateRoute>
-					}/>
-					<Route exact path="/admin/user-role/read" element={<UserRoleDataTable/>}/>
-					<Route exact path="/admin/user-role/create" element={<AddUserRole/>}/>W
-					<Route path="/admin/user-role/edit/:userID/:roleID" element={<EditUserRole/>}/>
+						<Route path="/list-requester/:userID" element={
+							<PrivateRoute>
+							<RequesterList />
+							</PrivateRoute>
+						}/>
+							
+					</Route>
 
-					<Route exact path="/admin/group/read" element={<GroupDataTable/>}/>
-					<Route exact path="/admin/group/create" element={<AddGroup/>}/>
-					<Route path="/admin/group/edit/:id" element={<EditGroup/>}/>
 
-				
-					<Route exact path="admin/chart" element={<Chart/>}/>
-					<Route exact path="admin/countRow" element={<CountRow/>}/>    
+					<Route element={<AdminLayout />} >
+						<Route path="/admin/user-role/read" element={<UserRoleDataTable/>}/>
+						<Route path="/admin/user-role/create" element={<AddUserRole/>}/>W
+						<Route path="/admin/user-role/edit/:userID/:roleID" element={<EditUserRole/>}/>
+
+						<Route path="/admin/group/read" element={<GroupDataTable/>}/>
+						<Route path="/admin/group/create" element={<AddGroup/>}/>
+						<Route path="/admin/group/edit/:id" element={<EditGroup/>}/>
+
+
+						<Route path="/admin/chart" element={<Chart/>}/>
+						<Route path="/admin/countRow" element={<CountRow/>}/>    
+					</Route>  
 				</Routes>
 				<AuthVerify logOut={logOut}/>
 			</div>
-		</div>
-	);
+		</SocketProvider>
+		
+	)
 }
 export default App;

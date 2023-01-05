@@ -20,11 +20,12 @@ const checkUserIsAdminGroup = async (groupId, userId) => {
   return await rootInstance.get(`/user/${userId}/check-admin/${groupId}`);
 }
 
+
 const getByUserID = (userId) =>{
   return rootInstance.get("/user/" + userId);
 }
 
-
+//không có api trong backend ???
 const createUser = async (user) => {
   return await rootInstance.post("/user/", user);
 }
@@ -36,7 +37,7 @@ const deleteUser = async (userId) => {
 const updateUser = async (userId, user) => {
   return await rootInstance.put("/user/" + userId, user);
 }
-
+/////////////////////////////////////////////////
 
 const likePost = (postId, userId) => {
   return rootInstance.post("/user/like-post", {postId: postId, userId: userId});

@@ -2,13 +2,14 @@ import React ,{useState ,useEffect,useRef} from 'react'
 import TextareaAutosize from 'react-textarea-autosize';
 import AuthService from '../../services/auth.service'
 import CommentService from '../../services/CommentService'
-import ProfileService from '../../services/ProfileService';
-import FirebaseService from '../../services/firebase.service';
+import ProfileService from '../../services/profile.service';
+import FirebaseSerive from '../../services/firebase.service';
 
 function Comment({index,formRef,increaseRenderValue,data}) {
 
+
     const [isReadonly, setIsReadonly] = useState(true);
-    const user = AuthService.getCurrentUser();
+    const currentuser = AuthService.getCurrentUser();
     const inputRef = useRef();
 
     const [firstName,setFirstName] = useState('');
@@ -30,7 +31,7 @@ function Comment({index,formRef,increaseRenderValue,data}) {
         ProfileService.getProfile(data.user.id).then((response) => {
             setFirstName(response.data.firstName);
             setLastName(response.data.lastName);
-            FirebaseService.getAvatarFromFirebase(response.data.avatar).then((response) => {
+            FirebaseSerive.getAvatarFromFirebase(response.data.avatar).then((response) => {
                 setAvatar(response)
             })
             
@@ -73,7 +74,7 @@ function Comment({index,formRef,increaseRenderValue,data}) {
         var content = inputUpdateComment;
         var post = data.post
 
-        const temp = {content,user,post}
+        const temp = {content,currentuser,post}
     
         
         CommentService.updateComments(commentID,temp).then((res)=>{
@@ -148,12 +149,20 @@ function Comment({index,formRef,increaseRenderValue,data}) {
                               <span className='icon feedback-icon mr-2' onClick={(e) => handlerCreateReply()}> 
                               <i className="fa fa-reply"></i>
                             </span>
+                          {
+                              currentuser.id === data.user.id
+                              ? 
+                              <>
                               <span className='icon delete-icon mr-2' onClick={()=> {if(window.confirm('Delete the item?')){deleteComment(data.id)}}}> 
-                              <i className="fa fa-trash"></i>
-                          </span>
-                          <span className='icon edit-icon mr-2' onClick={(e) => UpdateHandler(e,data.id)}> 
-                          <i className="fa fa-edit"></i>
-                          </span>     
+                                    <i className="fa fa-trash"></i>
+                                </span>
+                                <span className='icon edit-icon mr-2' onClick={(e) => UpdateHandler(e,data.id)}> 
+                                <i className="fa fa-edit"></i>
+                                </span>    
+                                </>
+                              :<></>
+                          }
+                          
                                 </div>
                             </div>  
 		</div>

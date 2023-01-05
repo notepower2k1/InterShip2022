@@ -11,7 +11,7 @@ import CommentsList from '../Comment/CommentsList';
 import FirebaseService from "../../services/firebase.service";
 import LikePostService from "../../services/likepost.service";
 import UserService from "../../services/user.service";
-import ProfileService from "../../services/ProfileService";
+import ProfileService from "../../services/profile.service";
 import { removePost } from "../../redux/actions/PostActions";
 import { getPassedTime } from "../../utils/spUtils";
 
@@ -112,7 +112,7 @@ const Post = ({ data, callBack, selected, onShowModal }) => {
     // Cần thêm @Modifying và @Transactional bên Repository mới Delete được
     const handleDisLikePost = async (event) => {
         // console.log(data.id, currentUser.id)
-    await UserService.dislikePost(data.id, currentUser.id)
+        await UserService.dislikePost(data.id, currentUser.id)
             .then((res) => {
                 // console.log(res.data);
                 readTotalLikes();
@@ -166,76 +166,73 @@ const Post = ({ data, callBack, selected, onShowModal }) => {
                 </div>
             </div>
             <div className="friend-info">
-            <figure>
-                <img src={avatar} alt=""/>
-            </figure>
-            <div className="friend-name">
-                <ins>{ data.userProfile.firstName.concat(" " + data.userProfile.lastName) }</ins>
-                <Link to={"/detail/post/" + data.id} >{getPassedTime(new Date(data.publishedDate)) }</Link>
-
-                
-            </div>
-            <div className="description">
-                    
+                <figure>
+                    <img src={avatar} alt=""/>
+                </figure>
+                <div className="friend-name">
+                    <ins>{ data.userProfile.firstName.concat(" " + data.userProfile.lastName) }</ins>
+                    <Link to={"/detail/post/" + data.id} >{getPassedTime(new Date(data.publishedDate)) }</Link>
+                </div>
+                <div className="description">
                     <p>
                         {ReactEmoji.emojify(data.content)}
                     </p>
                 </div>
-            <div className="post-meta">
-                <div className="">
-                    <a href="#" title="">
-                    { 
-                        data.image !== "NONE" 
-                            ?   (
-                                    images.length === 1 ?
-                                        <img 
-                                            className="img-fluid" 
-                                            src={ images[0] }
-                                            alt=""
-                                        /> : 
-                                        <div className="row">
-                                    {
-                                    images.map((image, index) =>
-                                    <div key={index} className="col-lg-6 col-md-12 mb-4 mb-lg-0">
-                                        <img 
-                                            className="shadow-1-strong rounded mb-4" 
-                                            src={image}
-                                            height="125"
-                                            alt=""
-                                        />
-                                    </div>
-                                        )}
-                                    </div>
-                                )
-                            : ""
-                    }
-                    </a>
-                </div>	
-                <div className="we-video-info">
-                    <p>{totalLikes}</p>
-
-                    <div className="feature-box d-flex ">
-                        {
-                            data.isLiked 
-                                ? 
-                                    <button className="btn btn-primary w-100"   onClick={ handleDisLikePost }>
-                                    <i className="fa fa-thumbs-down"> Dislike</i>
-                                    </button>
-                                :  
-                                    <button className="btn btn-primary w-100"   onClick={ handleLikePost }>
-                                    <i className="fa fa-thumbs-up"> Like</i>
-                                    </button>                           
+                <div className="post-meta">
+                    <div className="">
+                        <a href="#" title="">
+                        { 
+                            data.image !== "NONE" 
+                                ?   (
+                                        images.length === 1 ?
+                                            <img 
+                                                className="img-fluid" 
+                                                src={ images[0] }
+                                                alt=""
+                                            /> : 
+                                            <div className="row">
+                                        {
+                                        images.map((image, index) =>
+                                        <div key={index} className="col-lg-6 col-md-12 mb-4 mb-lg-0">
+                                            <img 
+                                                className="shadow-1-strong rounded mb-4" 
+                                                src={image}
+                                                height="125"
+                                                alt=""
+                                            />
+                                        </div>
+                                            )}
+                                        </div>
+                                    )
+                                : ""
                         }
+                        </a>
+                    </div>	
+                    <div className="we-video-info">
+                        <p>{totalLikes}</p>
 
-                        <button  
-                        className="btn btn-primary w-100"    
-                            onClick={(e) => handleOpenComment(e)}
-                        >
-                            <i className="fa fa-comment"> Comment</i>
-                        </button>
+                        <div className="feature-box d-flex ">
+                            {
+                                data.isLiked 
+                                    ? 
+                                        <button className="btn btn-primary w-100"   onClick={ handleDisLikePost }>
+                                        <i className="fa fa-thumbs-down"> Dislike</i>
+                                        </button>
+                                    :  
+                                        <button className="btn btn-primary w-100"   onClick={ handleLikePost }>
+                                        <i className="fa fa-thumbs-up"> Like</i>
+                                        </button>                           
+                            }
+
+                            <button  
+                            className="btn btn-primary w-100"    
+                                onClick={(e) => handleOpenComment(e)}
+                            >
+                                <i className="fa fa-comment"> Comment</i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
             </div>
        <div className="coment-area" id="comment-box" ref={el => formRef.current = el}>
            <CommentsList post={data}/>

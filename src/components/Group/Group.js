@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import UserService from "../../services/user.service";
 import GroupService from "../../services/group.service";
@@ -8,8 +8,6 @@ const Group = ({ data, user, callBack }) => {
 
     const [totalMembers, setTotalMembers] = useState(0);
     const [loading, setLoading] = useState("");
-
-    const navigate = useNavigate();
 
     useEffect(() => {
         GroupService.readTotalMembersById(data.id)

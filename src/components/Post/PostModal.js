@@ -40,6 +40,7 @@ const PostModal = ({ handleClose, oldData, isGroupPost,groupID }) => {
             let imagesString = res.reduce((accum, current) => {
                 return accum.concat("|" + current);
             }, "")
+            //FIX LẠI
             if(isGroupPost) {
                 if (oldData !== null) {
                     PostService.updatePost({content: content, image: images.length !== 0 ? imagesString : "NONE"}, oldData.id)

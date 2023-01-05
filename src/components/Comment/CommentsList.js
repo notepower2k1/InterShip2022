@@ -1,14 +1,17 @@
 import React ,{useState ,useEffect,useRef} from 'react'
 import CommentService from '../../services/CommentService'
-import ReplyLists from '../Reply/ReplyList';
+import ReplyList from '../Reply/ReplyList';
 import AddReplyComponent from '../Reply/AddReplyComponent';
 import TextareaAutosize from 'react-textarea-autosize';
 import Comment from './Comment';
 import AuthService from '../../services/auth.service'
-
+import { useSelector } from 'react-redux';
+import NotificationService from '../../services/notify.service';
 
 
 function CommentsList({post}) {
+
+  const { socket } = useSelector(state => state.socket);
 
   const [listComments,setListComments] = useState([]);
 
@@ -46,6 +49,11 @@ function CommentsList({post}) {
 
     CommentService.createComment(temp).then((res)=>{
       increaseRenderValue();
+
+      NotificationService.createNotification(user.id,post.user.id,`profile/${post.user.id}`,3).then(noty => {
+        socket.emit("sendNotification",noty.data)
+      })
+
     }).catch((err)=>{
         console.log(err)
     });
@@ -100,7 +108,7 @@ function CommentsList({post}) {
                     <Comment index={index} formRef={formRef} increaseRenderValue={increaseRenderValue} data ={comment}/>
 
                       <ul>
-                      <ReplyLists renderValue={renderValue} increaseRenderValue={increaseRenderValue} comment={comment} />
+                      <ReplyList renderValue={renderValue} increaseRenderValue={increaseRenderValue} comment={comment} />
                       </ul>
                   
 

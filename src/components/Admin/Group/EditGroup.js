@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {useParams, useNavigate} from "react-router-dom";
-
 import { Form, Button, Container, Alert } from 'react-bootstrap';
 import GroupService from "../../../services/group.service";
 

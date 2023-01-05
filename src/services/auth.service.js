@@ -1,12 +1,8 @@
 import rootInstance from "./utilsService/rootInstance";
 import TokenService from "./token.service";
 
-const register = async (username, email, password) => {
-	return await rootInstance.post("/auth/signup", {
-		username,
-		email,
-		password,
-	});
+const register = async (request) => {
+	return await rootInstance.post("/auth/signup", request);
 };
 
 const confirm = async (token) => {
@@ -34,12 +30,17 @@ const getCurrentUser = () => {
   	return JSON.parse(localStorage.getItem("user"));
 };
 
+const readUserByConfirmToken = async (token) => {
+	return await rootInstance.get("/auth/user/" + token);
+}
+
 const AuthService = {
 	register,
 	confirm,
 	login,
 	logout,
 	getCurrentUser,
+	readUserByConfirmToken
 };
 
 export default AuthService;
