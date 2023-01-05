@@ -41,7 +41,10 @@ const getLastConversationReplyID = async ()=>{
 
 const getCountNewMessage = async (conversationID,senderID)=>{
     return await rootInstance.get(`/conversation/reply/countnewmessage/${conversationID}/${senderID}`);
+}
 
+const getTotalNewMessage = async (userID)=>{
+    return await rootInstance.get(`/conversation/reply/total-new-mess/${userID}`);
 }
 
 const updateStatus = async (conversationID,senderID)=>{
@@ -99,12 +102,11 @@ const ConversationService = {
     createConversationRoom,
     createConversation,
 
-    //Thêm
     readOthersFriendNotJoined,
     updateConversationRoom,
     removeConversationRoom,
     addUserToConverRoom,
-    removeUserFromConverRoom
-    //
+    removeUserFromConverRoom,
+    getTotalNewMessage
 };
 export default ConversationService;

@@ -12,7 +12,7 @@ function Navbar({user,currentUser,logOut}) {
 
     const socket = useContext(SocketContext);
 
-
+    
     const [searchInput, setSearchInput] = useState();
     const [avatar,setAvatar] = useState(null)
 

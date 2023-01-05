@@ -4,51 +4,12 @@ import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import { isEmail } from "validator";
 import { Link } from "react-router-dom";
+
 import LocationService from "../../services/location.service";
-
 import AuthService from "../../services/auth.service";
+import { required, vusername, validEmail, vpassword } from "../../utils/Validate"
 
-const required = (value) => {
-    if (!value) {
-        return (
-            <div className="alert alert-danger" role="alert">
-                This field is required!
-            </div>
-        );
-    }
-};
-
-const validEmail = (value) => {
-    if (!isEmail(value)) {
-        return (
-            <div className="alert alert-danger" role="alert">
-                This is not a valid email.
-            </div>
-        );
-    }
-};
-
-const vusername = (value) => {
-    if (value.length < 3 || value.length > 20) {
-        return (
-            <div className="alert alert-danger" role="alert">
-                The username must be between 3 and 20 characters.
-            </div>
-        );
-    }
-};
-
-const vpassword = (value) => {
-    if (value.length < 6 || value.length > 40) {
-        return (
-            <div className="alert alert-danger" role="alert">
-                The password must be between 6 and 40 characters.
-            </div>
-        );
-    }
-};
-
-const Register = ({setIsRegistered}) => {
+const Register = ({onSetIsRegistered}) => {
     const form = useRef();
     const checkBtn = useRef();
 
@@ -71,9 +32,9 @@ const Register = ({setIsRegistered}) => {
     const [districtsList,setDistrictsList] = useState([]);
     const [wardsList,setWardLists] = useState([]);
 
-    const [provinceLabel,setProvinceLabel] = useState(true);
+    /* const [provinceLabel,setProvinceLabel] = useState(true);
     const [districtLabel,setDistrictLabel] = useState(true);
-    const [wardLabel,setWardLabel] = useState(true);
+    const [wardLabel,setWardLabel] = useState(true); */
 
     useEffect(() => {
         getAllProvinces();
@@ -154,24 +115,29 @@ const Register = ({setIsRegistered}) => {
 
         form.current.validateAll();
         if (checkBtn.current.context._errors.length === 0) {
-            AuthService.register({username, email, password, firstName, lastName}).then(
-                (response) => {
-                    setMessage(response.data.message);
-                    setLoading(false);
-                    setSuccessful(true);
-                },
-                (error) => {
-                    const resMessage =
-                        (error.response &&
-                        error.response.data &&
-                        error.response.data.message) ||
-                        error.message ||
-                        error.toString();
-                    setLoading(false);
-                    setMessage(resMessage);
-                    setSuccessful(false);
-                }
-            );
+            AuthService.register({
+                username, email, password, firstName, lastName,
+                wardCode: wardSelected, districtCode: districtSelected,
+                provinceCode: provinceSelected, address
+            })
+                .then(
+                    (response) => {
+                        setMessage(response.data.message);
+                        setLoading(false);
+                        setSuccessful(true);
+                    },
+                    (error) => {
+                        const resMessage =
+                            (error.response &&
+                            error.response.data &&
+                            error.response.data.message) ||
+                            error.message ||
+                            error.toString();
+                        setLoading(false);
+                        setMessage(resMessage);
+                        setSuccessful(false);
+                    }
+                );
         }
     };
 
@@ -302,19 +268,19 @@ const Register = ({setIsRegistered}) => {
                 {
                     wardSelected ? 
                     <div className="form-group">	
-                        <label className="control-label" htmlFor="address">Address</label>
                         <Input
                             type="text"
                             className="form-control"
                             name="address"
                             value={address}
                             onChange={onChangeAddress}
-                            validations={[required, validEmail]}
+                            validations={[required]}
+                            placeholder="Address"
                         />
                     </div>
                     :<div></div>
                 }
-                <Link onClick={()=> setIsRegistered(prev =>!prev) }>Already have an account</Link>
+                <Link onClick={()=> onSetIsRegistered(prev =>!prev) }>Already have an account</Link>
                 
                 <div className="submit-btns">
                     <button className="mtr-btn signup" disabled={loading} type="submit">

@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, Link ,Outlet } from "react-router-dom";
+import { Routes, Route ,Outlet } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useDispatch } from "react-redux";
-import {io} from "socket.io-client";
 
 import AuthService from "./services/auth.service";
 import AuthVerify from "./common/auth-verify";
 import PrivateRoute from "./utils/PrivateRoute";
 import Event from "./utils/Event";
 
-import Login from "./components/Login/Login";
-import Register from "./components/Register/Register";
+import Auth from "./components/Auth/Auth";
 import PostList from "./components/Post/PostList";
 import GroupList from "./components/Group/GroupList";
 import GroupCreate from "./components/Group/GroupCreate";
@@ -32,7 +30,6 @@ import GroupDataTable from './components/Admin/Group/GroupDataTable';
 import Chart from "./components/Admin/Statistics/Chart";
 import CountRow from './components/Admin/Statistics/CountRow';
 
-import NotificationList from "./components/Notification/NotificationList";
 import RequesterList from "./components/Friend/ListRequester";
 
 import AdminNavbar from "./AdminNavbar";
@@ -76,7 +73,9 @@ function App() {
 		<>
 			<main className={"main--container"}>
 				<div className={"main--content"}>
-					<div className="theme-layout">
+					<div className="theme-layout" 
+						style={{height: "100vh"}}
+					>
 						{ currentUser &&  <Navbar user={user} currentUser={currentUser} logOut={logOut}/>}
 						<Outlet />
 					</div>
@@ -103,7 +102,7 @@ function App() {
 			<div>
 				<Routes>
 					<Route element={<AppLayout />} >
-						<Route path="/login" element={<Login/>} />
+						<Route path="/auth" element={<Auth />} />
 						{
 							['/', '/posts'].map((path, index) => <Route key={index} path={path} element={
 								<PrivateRoute>
@@ -111,6 +110,8 @@ function App() {
 								</PrivateRoute>} />
 							)
 						}
+
+						<Route path="/confirm-account/:token" element={<ConfirmAccount />} />
 
 						<Route path="/detail/post/:postID" element={
 							<PrivateRoute>
