@@ -1,6 +1,5 @@
 package com.ntth.socialnetwork.controller;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import com.ntth.socialnetwork.repository.StatiticsRepository;
 
 
 @RestController
-@RequestMapping("/api/statitics")
+@RequestMapping("/api/statistics")
 @CrossOrigin
 public class StatiticsController {
 	

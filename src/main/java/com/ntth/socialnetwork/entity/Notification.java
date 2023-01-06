@@ -50,6 +50,8 @@ public class Notification {
 	
 
 
+
+
 	@Column(name = "url", nullable = true)
 	private String url;
 	

@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +26,8 @@ import com.ntth.socialnetwork.entity.ConverJoinDetails;
 import com.ntth.socialnetwork.entity.Conversation;
 import com.ntth.socialnetwork.entity.User;
 import com.ntth.socialnetwork.entity.UserProfile;
-import com.ntth.socialnetwork.payload.request.CreateRoomConvRequest;
+import com.ntth.socialnetwork.payload.request.AddUsersToConvRequest;
+import com.ntth.socialnetwork.payload.request.ConversationRequest;
 import com.ntth.socialnetwork.repository.ConvJoinDetailsRepository;
 import com.ntth.socialnetwork.repository.ConversationRepository;
 import com.ntth.socialnetwork.repository.UserProfileRepository;
@@ -101,10 +105,11 @@ public class ConversationController {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
 	@PostMapping("/add-room")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
 	public ResponseEntity<?> createRoomConv(
-			@RequestBody CreateRoomConvRequest request) {
+			@RequestBody AddUsersToConvRequest request) {
 		try {
 			String convName = new String();
 			
@@ -138,5 +143,124 @@ public class ConversationController {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
 	
+	@GetMapping("/{conv_id}/friends-not-joined/{user_id}")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public ResponseEntity<?> getProfileOfFriendNotJoinedConv(
+			@PathVariable("conv_id") Long conv_id,
+			@PathVariable("user_id") Long user_id) {
+		try {
+			List<UserProfile> profiles = userProfileRepo.getProfileOfFriendNotJoinedConv(conv_id, user_id);
+			return new ResponseEntity<>(profiles, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	
+	@PutMapping("/update-room/{conv_id}")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public ResponseEntity<?> updateConversation(
+			@RequestBody ConversationRequest request,
+			@PathVariable("conv_id") Long conv_id
+	) {
+		try {
+			Optional<Conversation> converData = conversationRepository.findById(conv_id);
+			if (converData.isPresent()) {
+				Conversation conver = converData.get();
+				conver.setName(request.getName());
+				conver.setStatus(request.getStatus());
+				return new ResponseEntity<>(conversationRepository.save(conver), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@DeleteMapping("/remove-room/{conv_id}")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public ResponseEntity<HttpStatus> removeConversation(@PathVariable("conv_id") Long conv_id) {
+		try {
+			Optional<Conversation> converData = conversationRepository.findById(conv_id);
+			conversationRepository.delete(converData.get());
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@PostMapping("/add-to/{conv_id}")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public ResponseEntity<?> addToConver(
+			@RequestBody AddUsersToConvRequest request,
+			@PathVariable("conv_id") Long conv_id
+	) {
+		try {
+			List<Long> membersID = request.getMembersID();
+			Optional<Conversation> converData = conversationRepository.findById(conv_id);
+			List<UserProfile> newMemberProfiles = new ArrayList<>();
+			
+			if (converData.isPresent()) {
+				Conversation conver = converData.get();
+				membersID.forEach(memberID -> {
+					User user = userRepository.findById(memberID).get();
+					UserProfile profile = userProfileRepo.getProfileWithUserID(user.getId());
+					
+					convJoinRepo.save(
+							new ConverJoinDetails(conver, user, new Date(System.currentTimeMillis()))
+					);
+					newMemberProfiles.add(profile);
+				});
+				
+				return new ResponseEntity<>(newMemberProfiles, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@DeleteMapping("/{user_id}/remove-from/{conv_id}")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public ResponseEntity<HttpStatus> removeFromConver(
+			@PathVariable("user_id") Long user_id,
+			@PathVariable("conv_id") Long conv_id
+	) {
+		try {
+			Conversation conver = conversationRepository.findById(conv_id).get();
+			User user = userRepository.findById(user_id).get();
+			
+			Optional<ConverJoinDetails> joinConv = convJoinRepo.findByConverAndUser(conver, user);
+			if (joinConv.isPresent()) {
+				convJoinRepo.delete(joinConv.get());
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}	
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	
+	
+	
+	
+	
+	@GetMapping("/{conv_id}/other-mem-ids/{user_id}")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public ResponseEntity<?> getOtherMemIDs(
+			@PathVariable("conv_id") Long conv_id,
+			@PathVariable("user_id") Long user_id) {
+		try {
+			List<Long> users = conversationRepository.getOtherUserID(user_id,conv_id);
+			return new ResponseEntity<>(users, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }

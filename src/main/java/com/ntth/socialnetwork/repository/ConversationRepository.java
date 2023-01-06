@@ -25,4 +25,8 @@ public interface ConversationRepository extends JpaRepository<Conversation, Long
 			+ "AND c_id IN (SELECT conv_id FROM joined_conver GROUP BY conv_id HAVING COUNT(conv_id) = 2)", nativeQuery = true)
 	Conversation getConverBy2ID(@Param("user_id") Long user_id, @Param("other_user_id") Long other_user_id);
 
+	
+	@Query(value ="SELECT u.user_id FROM user u JOIN joined_conver jc ON jc.user_id = u.user_id "
+			+ "WHERE jc.user_id <> :#{#user_id} AND conv_id = :#{#cv_id}",nativeQuery = true)
+	List<Long> getOtherUserID(@Param("user_id") Long user_id, @Param("cv_id") Long cv_id);
 }

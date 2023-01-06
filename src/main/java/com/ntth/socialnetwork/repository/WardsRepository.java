@@ -12,4 +12,7 @@ public interface WardsRepository extends JpaRepository<Wards, String>{
 	
 	@Query(value="SELECT * FROM wards WHERE `district_code` =:#{#district_code}",nativeQuery = true)
 	List<Wards> getWards(@Param("district_code") String district_code);
+	
+	
+	Wards findByCode(String code);
 }

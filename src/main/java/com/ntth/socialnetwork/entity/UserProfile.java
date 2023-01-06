@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -52,9 +53,10 @@ public class UserProfile {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
 	private User user;
 	
-	@Column(name = "location_id", nullable = false)
-	private Long locationID;
-
+	@ManyToOne
+	@JoinColumn(name = "location_id", nullable = false)
+	private Location location;
+	
 	public Long getUserProfileID() {
 		return userProfileID;
 	}
@@ -129,22 +131,24 @@ public class UserProfile {
 
 	
 
-	public Long getLocationID() {
-		return locationID;
-	}
-
-	public void setLocationID(Long locationID) {
-		this.locationID = locationID;
-	}
+	
 
 	
+
+	public Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(Location location) {
+		this.location = location;
+	}
 
 	public User getUser() {
 		return user;
 	}
 
 	public UserProfile(String firstName, String lastName, Long gender, Date dateOfBirth,
-			String avatar, String background, String about, Date updateDate, User user, Long locationID) {
+			String avatar, String background, String about, Date updateDate, User user,  Location location) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -155,8 +159,8 @@ public class UserProfile {
 		this.about = about;
 		this.updateDate = updateDate;
 		this.user = user;
-		this.locationID = locationID;
-	}
+		this.location = location;
+		}
 
 	public void setUser(User user) {
 		this.user = user;

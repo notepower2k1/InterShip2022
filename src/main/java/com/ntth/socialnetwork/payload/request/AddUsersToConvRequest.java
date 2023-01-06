@@ -2,7 +2,7 @@ package com.ntth.socialnetwork.payload.request;
 
 import java.util.List;
 
-public class CreateRoomConvRequest {
+public class AddUsersToConvRequest {
 	
 	private List<Long> membersID;
 

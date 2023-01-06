@@ -25,10 +25,9 @@ public interface LikePostRepository extends JpaRepository<LikePost, Long> {
 	public void dislikePost(@Param("post_id") Long post_id, @Param("user_id") Long user_id);
 	
 
-	@Query(value = "SELECT l.post_id, l.user_id, content, like_date FROM likepost l JOIN `post` p "
-			+ "WHERE l.user_id = :#{#user_id} AND p.post_id = l.post_id"
+	@Query(value = "SELECT * FROM likepost WHERE user_id = :#{#user_id} and post_id = :#{#post_id}"
 			, nativeQuery = true)
-	public List<LikePost> getPostsUserLiked(@Param("user_id") Long user_id);
+	public LikePost getPostsUserLiked(@Param("user_id") Long user_id,@Param("post_id") Long post_id);
 	
 //	@Query(value = "SELECT j.group_id, created_date, group_about, group_name FROM joinedgroup j JOIN `group` g "
 //			+ "WHERE user_id = :#{#user_id} AND g.group_id = j.group_id"

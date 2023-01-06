@@ -57,7 +57,6 @@ public class UserProfileController {
 		profileUpdate.setAvatar(profile.getAvatar());
 		profileUpdate.setBackground(profile.getBackground());
 		profileUpdate.setAbout(profile.getAbout());
-		profileUpdate.setLocationID(profile.getLocationID());
 
 		UserProfile result = userProfileRepo.save(profileUpdate);
 		return ResponseEntity.ok().body(result);

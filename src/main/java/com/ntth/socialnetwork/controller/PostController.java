@@ -231,12 +231,12 @@ public class PostController {
 	}
 	
 	
-	@GetMapping("/post-liked/{id}")
+	@GetMapping("/post-liked/{user-id}/{post-id}")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-	public ResponseEntity<List<LikePost>> getPostUserLiked(@PathVariable("id") Long id) {
+	public ResponseEntity<LikePost> getPostUserLiked(@PathVariable("user-id") Long userId,@PathVariable("post-id") Long postId) {
 		try {
-			List<LikePost> posts = likeRepository.getPostsUserLiked(id);
-			return new ResponseEntity<>(posts, HttpStatus.ACCEPTED);
+			LikePost post = likeRepository.getPostsUserLiked(userId,postId);
+			return new ResponseEntity<>(post, HttpStatus.ACCEPTED);
 		} catch (Exception e) {	
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}

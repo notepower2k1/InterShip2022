@@ -87,6 +87,14 @@ public class ConversationReplyController {
 		return conversationReplyRepository.getCountNewMessage(conversationID,userID);
 	}
 	
+	////
+	@GetMapping("/total-new-mess/{userID}")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public Long getTotalNewMessage(@PathVariable("userID") Long userID) {
+		return conversationReplyRepository.getTotalNewMessage(userID);
+	}
+	////
+	
 	@GetMapping("/{conversationID}/other-user-id/{userID}")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
 	public List<Long> getOthersUserID(@PathVariable("conversationID") Long conversationID,

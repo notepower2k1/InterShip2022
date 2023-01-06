@@ -2,17 +2,17 @@ package com.ntth.socialnetwork.payload.request;
 
 public class ConversationRequest {
 	private String name;
-	private Boolean type;
+	private int status;
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Boolean getType() {
-		return type;
+	public int getStatus() {
+		return status;
 	}
-	public void setType(Boolean type) {
-		this.type = type;
+	public void setType(int status) {
+		this.status = status;
 	}
 }

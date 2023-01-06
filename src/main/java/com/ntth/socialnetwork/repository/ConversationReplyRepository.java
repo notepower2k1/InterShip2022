@@ -39,6 +39,11 @@ public interface ConversationReplyRepository extends JpaRepository<ConversationR
 			+ "WHERE status = 0 and c_id_fk = :#{#c_id} and  user_id_fk <> :#{#user_id_fk}", nativeQuery = true)
 	Long getCountNewMessage(@Param("c_id") long c_id, @Param("user_id_fk") long user_id_fk) ;
 	
+	////
+	@Query(value = "SELECT Count(status) from conversation_reply "
+			+ "WHERE status = 0 and user_id_fk <> :#{#user_id_fk}", nativeQuery = true)
+	Long getTotalNewMessage(@Param("user_id_fk") long user_id_fk) ;
+	////
 	/*@Modifying
 	@Transactional
 	@Query(value = "UPDATE conversation_reply SET status=1 "

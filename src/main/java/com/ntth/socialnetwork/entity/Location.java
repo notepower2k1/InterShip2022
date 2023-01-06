@@ -1,11 +1,18 @@
 package com.ntth.socialnetwork.entity;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "location")
@@ -15,17 +22,24 @@ public class Location {
 	@Column(name = "location_id", nullable = false)
 	private Long id;
 	
-	@Column(name = "country", nullable = false)
-	private String country;
+	@ManyToOne
+	@JoinColumn(name = "province_code", nullable = false)
+	private Provinces province;
 	
-	@Column(name = "province", nullable = false)
-	private String province;
+	@ManyToOne
+	@JoinColumn(name = "district_code", nullable = false)
+	private Districts district;
 	
-	@Column(name = "city", nullable = false)
-	private String city;
+	@ManyToOne
+	@JoinColumn(name = "ward_code", nullable = false)
+	private Wards ward;
 	
 	@Column(name = "address", nullable = false)
 	private String address;
+	
+	@JsonIgnore
+  	@OneToMany(mappedBy="location")
+  	private Set<UserProfile> profiles;
 
 	public Long getId() {
 		return id;
@@ -35,28 +49,28 @@ public class Location {
 		this.id = id;
 	}
 
-	public String getCountry() {
-		return country;
-	}
-
-	public void setCountry(String country) {
-		this.country = country;
-	}
-
-	public String getProvince() {
+	public Provinces getProvince() {
 		return province;
 	}
 
-	public void setProvince(String province) {
+	public void setProvince(Provinces province) {
 		this.province = province;
 	}
 
-	public String getCity() {
-		return city;
+	public Districts getDistrict() {
+		return district;
 	}
 
-	public void setCity(String city) {
-		this.city = city;
+	public void setDistrict(Districts district) {
+		this.district = district;
+	}
+
+	public Wards getWard() {
+		return ward;
+	}
+
+	public void setWard(Wards ward) {
+		this.ward = ward;
 	}
 
 	public String getAddress() {
@@ -67,21 +81,16 @@ public class Location {
 		this.address = address;
 	}
 
-	public Location(Long id, String country, String province, String city, String address) {
-		super();
-		this.id = id;
-		this.country = country;
-		this.province = province;
-		this.city = city;
-		this.address = address;
-	}
-
 	public Location() {
 		super();
 	}
-	
-	
-	
-	
+
+	public Location(Provinces province, Districts district, Wards ward, String address) {
+		super();
+		this.province = province;
+		this.district = district;
+		this.ward = ward;
+		this.address = address;
+	}
 	
 }

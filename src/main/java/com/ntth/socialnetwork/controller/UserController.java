@@ -236,4 +236,17 @@ public class UserController {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	
+	@GetMapping("/year-comment")
+	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	public ResponseEntity<List<Long>> getNewCommentYear() {
+		try {
+			List<Long> countUsers = userRepo.getTimeComment();
+			return new ResponseEntity<List<Long>>(countUsers, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 }

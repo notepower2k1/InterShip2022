@@ -42,6 +42,13 @@ public class User {
   	@Column(name = "registered_date", nullable = false)
   	private Date registeredDate;
   	
+  	@Column(name = "is_enabled")
+  	private boolean isEnabled;
+  	
+  	@JsonIgnore
+  	@OneToOne(mappedBy="user")
+	private ConfirmationToken token;
+  	
   	@JsonIgnore
   	@ManyToMany(fetch = FetchType.LAZY)
   	@JoinTable(  name = "user_roles", 
@@ -77,6 +84,38 @@ public class User {
   	@OneToOne(mappedBy="user")
 	private UserProfile profile;
   	
+  	public User() {
+  		
+  	}
+
+  	public User(String username, String email, String password, Date registeredDate, boolean isEnabled) {
+	  this.username = username;
+	  this.email = email;
+	  this.password = password;
+	  this.registeredDate = registeredDate;
+	  this.isEnabled = isEnabled;
+  	}
+  	
+	public boolean isEnabled() {
+		return isEnabled;
+	}
+
+	public void setEnabled(boolean isEnabled) {
+		this.isEnabled = isEnabled;
+	}
+
+	public Set<Group> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(Set<Group> groups) {
+		this.groups = groups;
+	}
+
+	public void setComments(Set<PostComment> comments) {
+		this.comments = comments;
+	}
+
 	public Set<Post> getPosts() {
 		return posts;
 	}
@@ -117,17 +156,6 @@ public class User {
 	public void setConversationReply(Set<ConversationReply> conversationReply) {
 		this.conversationReply = conversationReply;
 	}
-
-	public User() {
-  		
-  	}
-
-  	public User(String username, String email, String password, Date registeredDate) {
-	  this.username = username;
-	  this.email = email;
-	  this.password = password;
-	  this.registeredDate = registeredDate;
-  	}
 
   	public Long getId() {
   		return id;

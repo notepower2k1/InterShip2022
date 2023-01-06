@@ -13,4 +13,6 @@ public interface DistrictsRepository extends JpaRepository<Districts, String> {
 	
 	@Query(value="SELECT * FROM districts WHERE province_code =:#{#province_code}",nativeQuery = true)
 	List<Districts> getDistricts(@Param("province_code") String province_code);
+	
+	Districts findByCode(String code);
 }

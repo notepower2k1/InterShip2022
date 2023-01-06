@@ -67,12 +67,32 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
 			+ "FROM (joined_conver jc JOIN user u ON u.user_id = jc.user_id) "
 			+ "JOIN userprofile up ON up.user_id = u.user_id WHERE conv_id = :#{#conv_id} AND jc.user_id <> :#{#user_id}", nativeQuery = true)
 	List<UserProfile> getProfileOfOtherConvMembers(@Param("conv_id") long conv_id, @Param("user_id") long user_id);
+	
 
-	@Query(value = "SELECT userprofile_id, avatar, background, dob, first_name, last_name, "
-			+ "gender, update_date, about, location_id, up.user_id "
-			+ "FROM (joined_conver jc JOIN user u ON u.user_id = jc.user_id) "
-			+ "JOIN userprofile up ON up.user_id = u.user_id WHERE conv_id = :#{#conv_id}", nativeQuery = true)
-	List<UserProfile> getProfileOfGroupMembers(@Param("conv_id") long conv_id);
+	@Query(value = "SELECT userprofile_id, avatar, background, dob, first_name, last_name, gender, update_date, about, location_id, up.user_id \r\n"
+			+ "FROM (joinedgroup jg JOIN user u ON jg.user_id = u.user_id) \r\n"
+			+ "JOIN userprofile up ON up.user_id = u.user_id WHERE group_id = :#{#group_id} AND u.user_id <> :#{#user_id}", nativeQuery = true)
+	List<UserProfile> getProfileOfGroupMembers(@Param("group_id") Long group_id, @Param("user_id") Long user_id);
 
+	
+	
+	
+	
+
+	@Query(value = "SELECT * FROM userprofile up JOIN friendship f ON up.user_id = f.user_id_2 "
+			+ "WHERE f.user_id_1 = :#{#user_id} AND status_id = 2 AND up.user_id NOT IN ( "
+			+ "    SELECT user_id FROM joined_conver WHERE conv_id = :#{#conv_id} "
+			+ ") "
+			+ "UNION "
+			+ "SELECT * FROM userprofile up JOIN friendship f ON up.user_id = f.user_id_1 "
+			+ "WHERE f.user_id_2 = :#{#user_id} AND status_id = 2 AND up.user_id NOT IN ( "
+			+ "    SELECT user_id FROM joined_conver WHERE conv_id = :#{#conv_id} "
+			+ ")", nativeQuery = true)
+	List<UserProfile> getProfileOfFriendNotJoinedConv(
+			@Param("conv_id") long conv_id, 
+			@Param("user_id") long user_id
+	);
+
+	
 
 }

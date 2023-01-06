@@ -7,4 +7,5 @@ import com.ntth.socialnetwork.entity.Provinces;
 
 public interface ProvincesRepository extends JpaRepository<Provinces, String>  {
 
+	Provinces findByCode(String code);
 }

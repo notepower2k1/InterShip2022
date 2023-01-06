@@ -19,6 +19,18 @@ public class SignupRequest {
   @NotBlank
   @Size(min = 6, max = 40)
   private String password;
+  
+  private String firstName;
+  
+  private String lastName;
+  
+  private String provinceCode;
+
+  private String districtCode;
+  
+  private String wardCode;
+  
+  private String address;
 
   public String getUsername() {
     return username;
@@ -51,4 +63,53 @@ public class SignupRequest {
   public void setRole(Set<String> role) {
     this.role = role;
   }
+
+	public String getFirstName() {
+		return firstName;
+	}
+	
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	
+	public String getLastName() {
+		return lastName;
+	}
+	
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getProvinceCode() {
+		return provinceCode;
+	}
+
+	public void setProvinceCode(String provinceCode) {
+		this.provinceCode = provinceCode;
+	}
+
+	public String getDistrictCode() {
+		return districtCode;
+	}
+
+	public void setDistrictCode(String districtCode) {
+		this.districtCode = districtCode;
+	}
+
+	public String getWardCode() {
+		return wardCode;
+	}
+
+	public void setWardCode(String wardCode) {
+		this.wardCode = wardCode;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+  
 }

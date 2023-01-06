@@ -105,10 +105,10 @@ public class GroupController {
 			          .badRequest()
 			          .body(new MessageResponse("Error: Your group name is already taken!"));
 		}
-		Optional<Group> postData = groupRepository.findById(id);
+		Optional<Group> groupData = groupRepository.findById(id);
 		
-		if (postData.isPresent()) {
-			Group group = postData.get();
+		if (groupData.isPresent()) {
+			Group group = groupData.get();
 			group.setGroupName(groupRequest.getGroupName());
 			group.setGroupAbout(groupRequest.getGroupAbout());
 			return new ResponseEntity<>(groupRepository.save(group), HttpStatus.OK);
@@ -150,11 +150,14 @@ public class GroupController {
 		}
 	}
 	
-	@GetMapping("/{id}/member-profile")
+	@GetMapping("/{user_id}/other-member-profile/{group_id}")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-	public ResponseEntity<List<UserProfile>> getProfileOfGroupMembers(@PathVariable("id") Long id) {
+	public ResponseEntity<List<UserProfile>> getProfileOfGroupMembers(
+			@PathVariable("user_id") Long user_id,
+			@PathVariable("group_id") Long group_id
+			) {
 		try {
-			List<UserProfile> profiles = userProfileRepo.getProfileOfGroupMembers(id);
+			List<UserProfile> profiles = userProfileRepo.getProfileOfGroupMembers(group_id, user_id);
 			return new ResponseEntity<>(profiles, HttpStatus.ACCEPTED);
 		} catch (Exception e) {	
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
