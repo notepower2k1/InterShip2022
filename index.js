@@ -43,6 +43,15 @@ io.on("connection", (socket)=>{
         };
     });
 
+   socket.on("sendMessNotification",({recipientID,otherUserList})=>{
+        users.forEach((user) => {
+            if (user) {
+                io.to(user.socketID).emit("getMessNotification",otherUserList)
+             }
+          
+        })
+    });
+    
     //send and get notification
     socket.on("sendNotification",(noty) => {
         const user = getUser(noty.recipient.id);
